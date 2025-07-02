@@ -26,7 +26,7 @@ namespace Engine_Component.System.Serialization
             return (T)serializer.Deserialize(fileStream);
         }
 
-        private static bool TryGetComponentTypes(CMSEntity entity, out Type[] allSerialize)
+        private bool TryGetComponentTypes(CMSEntity entity, out Type[] allSerialize)
         {
             var allSerializableComponent = entity.GetAllComponent().Keys.Where(component =>
                 component.IsDefined(typeof(SerializableAttribute), false)).ToArray();

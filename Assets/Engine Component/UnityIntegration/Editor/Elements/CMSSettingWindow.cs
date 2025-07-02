@@ -1,7 +1,8 @@
+#if UNITY_EDITOR
 using Engine_Component.Utility;
 using UnityEditor;
 using UnityEngine;
-#if UNITY_EDITOR
+
 namespace Engine_Component.UnityIntegration.Editor
 {
     public class CMSSettingWindow : CMSWindowTab

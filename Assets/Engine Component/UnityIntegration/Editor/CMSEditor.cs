@@ -31,6 +31,8 @@ namespace Engine_Component.CMSSystem
         [MenuItem("CMS/CMS CENTER")]
         public static void ShowWindow()
         {
+
+
             var window = GetWindow<CMSEditor>("CMS Center");
             window.minSize = new Vector2(400, 500);
             UpdateDatabase();
@@ -39,6 +41,19 @@ namespace Engine_Component.CMSSystem
         private void OnEnable()
         {
             UpdateDatabase();
+
+            foreach (var tabs in Tabs.Values)
+            {
+                tabs.OnEnable(this);
+            }
+        }
+
+        private void OnSelectionChange()
+        {
+            foreach (var tabs in Tabs.Values)
+            {
+                tabs.OnSelectionChange();
+            }
         }
 
         private void OnGUI()
@@ -67,9 +82,10 @@ namespace Engine_Component.CMSSystem
 
                 GUILayout.FlexibleSpace();
 
-                _forceUpdate = EditorGUILayout.ToggleLeft("Force Update", _forceUpdate, GUILayout.Width(100));
             }
             EditorGUILayout.EndHorizontal();
+
+            _forceUpdate = EditorGUILayout.ToggleLeft("Force Update", _forceUpdate, GUILayout.Width(100));
         }
 
         private void DrawTabButtons()
