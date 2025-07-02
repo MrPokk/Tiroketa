@@ -9,7 +9,7 @@ namespace Game._Script.Interaction
     {
         public void Update(float timeDelta)
         {
-            var bulletPresenter = CMS.GetPresenter<BulletPresenter>();
+            var bulletPresenter = CMSRuntimer.GetPresenter<BulletPresenter>();
             var bullets = bulletPresenter.GetModelEntities();
             var entitiesToDestroy = new List<CMSEntity>();
 
@@ -19,9 +19,9 @@ namespace Game._Script.Interaction
                 if (destroyTimeComponent == null)
                     continue;
 
-                destroyTimeComponent.Properties.Decrease(timeDelta);
+                destroyTimeComponent.Decrease(timeDelta);
 
-                if (destroyTimeComponent.Properties.TotalTime <= 0f)
+                if (destroyTimeComponent.TotalTime <= 0f)
                 {
                     entitiesToDestroy.Add(entity);
                 }
@@ -29,7 +29,7 @@ namespace Game._Script.Interaction
 
             foreach (var entity in entitiesToDestroy)
             {
-                CMS.GetPresenter<BulletPresenter>().DestroyEntity(entity.GetView());
+                CMSRuntimer.GetPresenter<BulletPresenter>().DestroyEntity(entity.GetView());
             }
         }
     }

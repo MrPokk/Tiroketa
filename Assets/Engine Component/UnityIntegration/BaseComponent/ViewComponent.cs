@@ -5,13 +5,13 @@ namespace Engine_Component.UnityIntegration.BaseComponent
 {
     public class ViewComponent : EntityComponent, IInitializableToArg<ViewComponent.ViewProperty>
     {
-        public ViewProperty Properties { get; private set; }
+        public ViewProperty Properties { get; set; }
         public void Init(ViewProperty property)
         {
             if (property == null)
                 return;
 
-            var viewBase = CMSView.Get(property.Original.ID);
+            var viewBase = CMSViewDatabase.Get(property.Original.ID);
             Properties = new ViewProperty(viewBase);
         }
 

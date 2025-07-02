@@ -1,5 +1,3 @@
-
-
 using Engine_Component.Utility;
 public abstract class BaseInteraction
 {

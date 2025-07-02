@@ -10,7 +10,7 @@ using UnityEngine;
 public class Root : RootMonoBehavior
 {
     public Camera Camera { get; private set; }
-    
+
     [SerializeField] private GridInspector _gridInspector;
 
     protected override void PreGStart()
@@ -21,8 +21,9 @@ public class Root : RootMonoBehavior
     {
 
         var gridPresenter = new GridPresenter(_gridInspector);
-
-        var player = CMS.GetPresenter<MobPresenter>().SpawnEntity(typeof(PlayerModel));
+        
+        var player = CMSRuntimer.GetPresenter<MobPresenter>().SpawnEntity(typeof(PlayerModel));
+        var playerNew = CMSRuntimer.GetPresenter<MobPresenter>().SpawnEntity(typeof(PlayerModel));
         player.GetModel().GetComponent(out InsideItemComponent _).GiveItem<PistolModel>(player.transform);
     }
 }

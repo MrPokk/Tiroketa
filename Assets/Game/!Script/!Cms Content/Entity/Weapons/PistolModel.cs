@@ -12,12 +12,12 @@ namespace Game._Script._Cms_Content.Entity.Weapon
     {
         public PistolModel()
         {
-            AddComponent(out ViewComponent _).Init(new(CMSView.Get<WeaponDebugView>()));
+            AddComponent(out ViewComponent _).Init(new(CMSViewDatabase.Get<WeaponDebugView>()));
             AddComponent(out AttackComponent _).Init(new(AttackProcess));
         }
         private void AttackProcess()
         {
-            var bullet = CMS.GetPresenter<BulletPresenter>().SpawnEntity(
+            var bullet = CMSRuntimer.GetPresenter<BulletPresenter>().SpawnEntity(
                 typeof(StandardBulletModel), position: GetView().transform.position);
             bullet.GetModel<AbstractBullet>().Init(GetView().transform);
         }

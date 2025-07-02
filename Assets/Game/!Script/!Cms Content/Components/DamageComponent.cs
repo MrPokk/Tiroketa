@@ -6,7 +6,8 @@ namespace Game._Script.CMSGame.Components
 {
     public class DamageComponent : EntityComponent, IInitializableToArg<DamageComponent.DamageProperty>
     {
-        public DamageProperty Properties { get; private set; }
+        public DamageProperty Properties { get; set; }
+
         public class DamageProperty
         {
             public int ApplyDamage { get; private set; }

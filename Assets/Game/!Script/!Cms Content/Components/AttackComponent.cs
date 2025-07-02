@@ -5,11 +5,10 @@ namespace Game._Script.CMSGame.Components
 {
     public class AttackComponent : EntityComponent, IInitializableToArg<AttackComponent.AttackProperty>
     {
-        public AttackProperty Properties { get; private set; }
+        public AttackProperty Properties { get; set; }
 
         public class AttackProperty
         {
-            
             public Action AttackProcess { get; private set; }
 
             public AttackProperty(Action attackProcess)

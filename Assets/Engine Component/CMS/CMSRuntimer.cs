@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Engine_Component.CMSSystem
 {
-    public sealed class CMS : BaseInteraction, IInitInMain
+    public sealed class CMSRuntimer : BaseInteraction, IInitInMain
     {
         public override Priority PriorityInteraction { get => Priority.FIRST_TASK; }
 

@@ -4,7 +4,7 @@ namespace Engine_Component.Utility.Interfaces
 {
     public abstract class EntityComponent
     {
-        public Type ID { get => GetType(); }
+        public Type ID => GetType();
     }
 
     public interface IInitializable
@@ -13,7 +13,7 @@ namespace Engine_Component.Utility.Interfaces
     }
     public interface IInitializableToArg<T> where T : class
     {
-        public T Properties { get; }
+        public T Properties { get; set; }
         public void Init(T property);
         public T ValidateProperty(T property) { return property; }
     }

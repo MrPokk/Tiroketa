@@ -8,7 +8,7 @@ namespace Game._Script.Interaction
     {
         public void PhysicUpdate(float timeDelta)
         {
-            var allPresenter = CMS.GetAllPresenters();
+            var allPresenter = CMSRuntimer.GetAllPresenters();
             foreach (var presenter in allPresenter)
             {
                var movePresenter = presenter.GetEntitiesToComponent<MoveComponent>();

@@ -25,7 +25,7 @@ namespace Game._Script.Interaction
         {
             var inputVector2 = _inputSystem.InputGameplay.move.ReadValue<Vector2>();
 
-            var allModel = CMS.GetPresenter<MobPresenter>().GetEntitiesToComponent<ControlComponent>();
+            var allModel = CMSRuntimer.GetPresenter<MobPresenter>().GetEntitiesToComponent<ControlComponent>();
             foreach (var entity in allModel)
             {
                 entity.GetComponent(out ControlComponent _).ReadInput = inputVector2;
@@ -34,7 +34,7 @@ namespace Game._Script.Interaction
 
         private void InteractionAttack(InputAction.CallbackContext context)
         {
-            var allModel = CMS.GetPresenter<MobPresenter>().GetEntitiesToComponents(typeof(ControlComponent), typeof(AttackComponent));
+            var allModel = CMSRuntimer.GetPresenter<MobPresenter>().GetEntitiesToComponents(typeof(ControlComponent), typeof(AttackComponent));
             foreach (var entity in allModel)
             {
                 entity.GetComponent(out AttackComponent _).Properties.AttackProcess.Invoke();

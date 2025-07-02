@@ -14,13 +14,11 @@ namespace Game._Script._Cms_Content.Entity.Bullets
         protected void InitComponents(
             ViewComponent.ViewProperty viewProperty,
             DamageComponent.DamageProperty damageProperty,
-            DestroyTimeComponent.DestroyTimeProperty destroyProperty,
             MoveComponent.MoveProperty moveProperty
         )
         {
             AddComponent(out ViewComponent _).Init(viewProperty);
             AddComponent(out DamageComponent _).Init(damageProperty);
-            AddComponent(out DestroyTimeComponent _).Init(destroyProperty);
             AddComponent(out MoveComponent _).Init(moveProperty);
 
             Speed = moveProperty.Speed;

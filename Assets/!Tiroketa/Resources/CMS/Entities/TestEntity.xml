@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<TestEntity xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Components>
+    <Component xsi:type="OneTestComponent">
+      <TestValue>10</TestValue>
+      <TestDsds>540</TestDsds>
+    </Component>
+    <Component xsi:type="TwoTestComponent">
+      <Test>3</Test>
+    </Component>
+  </Components>
+</TestEntity>

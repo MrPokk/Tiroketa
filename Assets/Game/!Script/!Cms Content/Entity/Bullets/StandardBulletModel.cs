@@ -9,9 +9,8 @@ namespace Game._Script._Cms_Content.Entity.Bullets
         public StandardBulletModel()
         {
             InitComponents(
-                new(CMSView.Get<StandardBulletView>()),
+                new(CMSViewDatabase.Get<StandardBulletView>()),
                 new(10),
-                new(2),
                 new(MoveProcess, 40));
         }
         private void MoveProcess()

@@ -7,7 +7,9 @@ namespace Game._Script.CMSGame.Components
 {
     public class MoveComponent : EntityComponent, IInitializableToArg<MoveComponent.MoveProperty>
     {
-        public MoveProperty Properties { get; private set; }
+
+        public MoveProperty Properties { get; set; }
+
         public class MoveProperty
         {
             public Action MoveProcess { get; private set; }
