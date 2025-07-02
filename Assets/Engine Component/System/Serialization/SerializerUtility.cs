@@ -1,30 +1,32 @@
-using Engine_Component.Utility;
 using System;
+using System.Data;
 using System.IO;
 using System.Runtime.Serialization;
-using UnityEngine;
+using System.Xml.Serialization;
 
 namespace Engine_Component.System.Serialization
 {
     public static class SerializerUtility
     {
-        public static string TrySerialize(ISerializerProvider providerSerializer, Type typeObject, string pathBase)
+        public static string TrySerialize(ISerializerProvider serializerProvider)
         {
             try
             {
+                var typeObject = serializerProvider.GetObjectType();
+                var fullPath = serializerProvider.GetFullPath();
+
                 if (typeObject.IsAbstract)
                     throw new ArgumentException($"ERROR: {typeObject} is Abstract");
 
-                PathUtility.ValidatePath(ref pathBase);
+                if (fullPath == null || !File.Exists(fullPath))
+                    throw new AggregateException("ERROR: path not valid");
 
-                var valueObject = Activator.CreateInstance(typeObject);
-                var serializer = providerSerializer.Serialization(valueObject);
+                var serializer = GetSerializer(serializerProvider, out var instanceObject);
 
-                var finalPath = $"{pathBase}{typeObject.Name}.xml";
-                using var fileStream = new FileStream(finalPath, FileMode.Create);
-                serializer.Serialize(fileStream, valueObject);
+                using var fileStream = new FileStream(fullPath, FileMode.Create);
+                serializer?.Serialize(fileStream, instanceObject);
 
-                return finalPath;
+                return fullPath;
             }
             catch (SerializationException ex)
             {
@@ -32,27 +34,34 @@ namespace Engine_Component.System.Serialization
             }
         }
 
-        public static T TryDeserialize<T>(ISerializerProvider providerSerializer, string filePath)
+        public static T TryDeserialize<T>(ISerializerProvider serializerProvider)
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(filePath))
-                    throw new ArgumentNullException(nameof(filePath), "File path cannot be null or empty");
+                var filePath = serializerProvider.GetFullPath();
 
                 if (!File.Exists(filePath))
                     throw new FileNotFoundException($"File not found: {filePath}");
 
-                var deserializedObject = providerSerializer.Deserialize<T>(filePath);
+                var serializer = GetSerializer(serializerProvider, out var instanceObject);
 
-                if (deserializedObject == null)
-                    throw new InvalidOperationException($"Failed to deserialize object of type from {filePath}");
+                if (instanceObject.GetType() != typeof(T))
+                    throw new TypeAccessException($"ERROR: object {instanceObject} in not type T");
 
-                return deserializedObject;
+                using var fileStream = new FileStream(filePath, FileMode.Open);
+                return (T)serializer.Deserialize(fileStream);
             }
             catch (SerializationException ex)
             {
                 throw new SerializationException($"Failed to Deserialize entity: {ex.Message}");
             }
+        }
+
+        private static XmlSerializer GetSerializer(ISerializerProvider serializerProvider, out object instanceObject)
+        {
+            var valueObject = Activator.CreateInstance(serializerProvider.GetObjectType());
+            instanceObject = valueObject;
+            return serializerProvider.Serialization(ref valueObject);
         }
     }
 }

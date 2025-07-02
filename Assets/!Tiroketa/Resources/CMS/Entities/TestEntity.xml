@@ -5,8 +5,5 @@
       <TestValue>10</TestValue>
       <TestDsds>540</TestDsds>
     </Component>
-    <Component xsi:type="TwoTestComponent">
-      <Test>6</Test>
-    </Component>
   </Components>
 </TestEntity>

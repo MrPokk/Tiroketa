@@ -3,6 +3,7 @@ using Engine_Component.UnityIntegration.BaseComponent;
 using Game._Script._Cms_Content.Entity.Mobs;
 using Game._Script._Cms_Content.View.Mobs;
 using Game._Script.CMSGame.Components;
+using Game.TESTCMS;
 using System;
 using UnityEngine;
 
@@ -16,7 +17,7 @@ namespace Game._Script._Cms_Content
             AddComponent(out ViewComponent _).Init(new(CMSViewDatabase.Get<PlayerView>()));
             AddComponent(out AttackComponent _).Init(new(AttackProcess));
             AddComponent(out MoveComponent _).Init(new(MoveProcess, 5));
-            
+
             AddComponent(out ControlComponent _);
             AddComponent(out InsideItemComponent _);
         }

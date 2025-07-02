@@ -21,26 +21,23 @@ namespace Engine_Component.CMSSystem
 
         private Vector2 _scrollPosition;
 
-        private static void UpdateDatabase(bool forceUpdate = false)
+        private static void UpdateDatabaseInEditor(bool forceUpdate = false)
         {
-            CMSViewDatabase.FindAll(forceUpdate);
-            CMSEntityDatabase.FindAll(forceUpdate);
+            CMSDatabaseInitializer.UpdateDatabase(forceUpdate);
             AssetDatabase.Refresh();
         }
 
         [MenuItem("CMS/CMS CENTER")]
         public static void ShowWindow()
         {
-
-
             var window = GetWindow<CMSEditor>("CMS Center");
             window.minSize = new Vector2(400, 500);
-            UpdateDatabase();
+            UpdateDatabaseInEditor();
         }
 
         private void OnEnable()
         {
-            UpdateDatabase();
+            UpdateDatabaseInEditor();
 
             foreach (var tabs in Tabs.Values)
             {
@@ -50,14 +47,21 @@ namespace Engine_Component.CMSSystem
 
         private void OnSelectionChange()
         {
+            if (!hasFocus)
+                return;
+
             foreach (var tabs in Tabs.Values)
             {
                 tabs.OnSelectionChange();
             }
         }
 
+
         private void OnGUI()
         {
+            if (!hasFocus)
+                return;
+
             EditorGUILayout.BeginVertical();
             {
                 DrawHeader();
@@ -78,7 +82,7 @@ namespace Engine_Component.CMSSystem
                 GUILayout.FlexibleSpace();
 
                 if (GUILayout.Button("Refresh Database", GUILayout.Width(150), GUILayout.Height(25)))
-                    UpdateDatabase(_forceUpdate);
+                    UpdateDatabaseInEditor(_forceUpdate);
 
                 GUILayout.FlexibleSpace();
 

@@ -9,10 +9,10 @@ namespace Engine_Component.UnityIntegration.Editor
     public class CMSInspectorWindow : CMSWindowTab
     {
         private EditorWindow _parentWindow;
-
+        
         private TextAsset _selectedXmlAsset;
         private string _xmlText;
-        
+
         private Vector2 _scrollPosition;
 
         public override void OnEnable(EditorWindow editorWindow)
@@ -24,7 +24,7 @@ namespace Engine_Component.UnityIntegration.Editor
         {
             if (!IsSelectFileXml(out var file))
                 return;
-            
+
             _selectedXmlAsset = file;
             _xmlText = _selectedXmlAsset.text;
             _parentWindow.Repaint();

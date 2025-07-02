@@ -4,12 +4,23 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using UnityEngine;
 
 namespace Engine_Component.CMSSystem
 {
     public static class CMSEntityDatabase
     {
         private readonly static Dictionary<Type, string> AllEntity = new Dictionary<Type, string>();
+
+        public static string GetPath(Type typeEntity)
+        {
+            return AllEntity.GetValueOrDefault(typeEntity);
+        }
+
+        public static string GetPath<T>() where T : CMSEntity
+        {
+            return GetPath(typeof(T));
+        }
 
         public static IReadOnlyDictionary<Type, string> GetAll()
         {
@@ -33,10 +44,7 @@ namespace Engine_Component.CMSSystem
 
                     if (!File.Exists(fullPath) || forceUpdate)
                     {
-                        var pathToEntity = SerializerUtility.TrySerialize(
-                            new CMSSerializerToDatabase(),
-                            typeEntity,
-                            directoryPath);
+                        var pathToEntity = SerializerUtility.TrySerialize(new CMSSerializer(typeEntity, fullPath));
 
                         AllEntity.TryAdd(typeEntity, pathToEntity);
                     }
@@ -48,8 +56,7 @@ namespace Engine_Component.CMSSystem
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException(
-                    $"CMSEntityDatabase initialization failed: {ex.Message}", ex);
+                throw new InvalidOperationException($"CMSEntityDatabase initialization failed: {ex.Message}", ex);
             }
         }
     }
