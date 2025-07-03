@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using Engine_Component.UnityIntegration.Editor;
+using Game.TESTCMS;
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
@@ -10,11 +11,11 @@ namespace Engine_Component.CMSSystem
     public class CMSEditor : EditorWindow
     {
         // The order of rendering depends on the index
-        private readonly static Dictionary<(int index, string name), CMSWindowTab> Tabs = new Dictionary<(int, string), CMSWindowTab>()
+        private readonly static Dictionary<(int index, string name), CMSEditorTab> Tabs = new Dictionary<(int, string), CMSEditorTab>()
         {
-            { (0, "Database"), new CMSDatabaseWindow() },
-            { (1, "Inspector"), new CMSInspectorWindow() },
-            { (2, "Settings"), new CMSSettingWindow() }
+            { (0, "Database"), new CmsDatabaseEditor() },
+            { (1, "Inspector"), new CmsInspectorEditor() },
+            { (2, "Settings"), new CmsSettingEditor() }
         };
         private int _currentTabIndex = 0;
         private bool _forceUpdate = false;
@@ -62,6 +63,7 @@ namespace Engine_Component.CMSSystem
             if (!hasFocus)
                 return;
 
+            
             EditorGUILayout.BeginVertical();
             {
                 DrawHeader();
@@ -124,9 +126,7 @@ namespace Engine_Component.CMSSystem
                 EditorGUILayout.EndScrollView();
             }
             else
-            {
                 EditorGUILayout.HelpBox($"Tab with index {_currentTabIndex} is not available", MessageType.Warning);
-            }
         }
 
         private void DrawSlider(int padding = 1)

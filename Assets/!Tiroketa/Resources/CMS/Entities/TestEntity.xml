@@ -1,9 +1,10 @@
 <?xml version="1.0"?>
-<TestEntity xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<TestEntity>
   <Components>
-    <Component xsi:type="OneTestComponent">
-      <TestValue>10</TestValue>
-      <TestDsds>540</TestDsds>
+    <Component type="Game.TESTCMS.TwoTestComponent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+      <TwoTestComponent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <Test>87</Test>
+      </TwoTestComponent>
     </Component>
   </Components>
 </TestEntity>

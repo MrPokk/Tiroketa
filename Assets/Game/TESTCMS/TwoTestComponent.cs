@@ -1,28 +1,14 @@
 using Engine_Component.Utility.Interfaces;
 using System;
+using System.Xml.Serialization;
 
 namespace Game.TESTCMS
 {
     [Serializable]
-    public class TwoTestComponent : EntityComponent, IInitializableToArg<TwoTestComponent.PropertyTest>
+    [XmlInclude(typeof(TwoTestComponent))]
+    public class TwoTestComponent : EntityComponent
     {
-        public float Test = 3;
-
-        
-        [Serializable]
-        public class PropertyTest : TagProperty
-        {
-            public float Test = 3;
-        }
-        
-        public PropertyTest Properties { get; set; }
-        public void Init(PropertyTest property)
-        {
-            Properties = property;
-        }
+        public int Test;
     }
-    [Serializable]
-    public class TagProperty
-    { }
 
 }

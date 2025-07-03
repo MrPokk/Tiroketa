@@ -7,6 +7,7 @@ namespace Engine_Component.System.Serialization
     {
         Type GetObjectType();
         string GetFullPath();
+        
         XmlSerializer Serialization(ref object value);
     }
 }

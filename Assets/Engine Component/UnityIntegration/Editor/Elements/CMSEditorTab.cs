@@ -3,7 +3,7 @@ using UnityEditor;
 
 namespace Engine_Component.UnityIntegration.Editor
 {
-    public abstract class CMSWindowTab
+    public abstract class CMSEditorTab
     {
         public virtual void OnEnable(EditorWindow editorWindow) { }
         public virtual void OnSelectionChange() { }

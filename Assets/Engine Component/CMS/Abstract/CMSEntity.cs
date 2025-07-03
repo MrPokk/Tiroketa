@@ -1,10 +1,14 @@
 using Engine_Component.UnityIntegration.BaseComponent;
+using Engine_Component.Utility;
 using Engine_Component.Utility.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Xml;
+using System.Xml.Schema;
 using System.Xml.Serialization;
+using UnityEngine;
 
 namespace Engine_Component.CMSSystem
 {
@@ -26,7 +30,7 @@ namespace Engine_Component.CMSSystem
         {
             Properties ??= args;
         }
-
+        
         public BaseView GetView()
         {
             return GetComponent(out ViewComponent _)?.Properties?.Current;
@@ -59,6 +63,27 @@ namespace Engine_Component.CMSSystem
             return null;
         }
 
+        public T GetOrAddComponent<T>(out T refComponent) where T : EntityComponent, new()
+        {
+            return !HasComponent<T>()
+                ? AddComponent(out refComponent)
+                : GetComponent(out refComponent);
+        }
+
+        public bool TryGetSerializeComponentTypes(out Type[] allSerialize)
+        {
+            var allSerializableComponent = AllSerializeComponents.Select(component => component.GetType()).ToArray();
+
+            allSerialize = allSerializableComponent;
+            return allSerializableComponent.Any();
+        }
+
+        public List<EntityComponent> GetSerializeComponents()
+        {
+            return new List<EntityComponent>(_validComponents.Values
+                .Where(component => component.GetType().IsDefined(typeof(SerializableAttribute))));
+        }
+
         public void RemoveComponent<T>() where T : EntityComponent
         {
             _validComponents.Remove(typeof(T));
@@ -74,24 +99,11 @@ namespace Engine_Component.CMSSystem
             return _validComponents.ContainsKey(typeof(T));
         }
 
-        public T GetOrAddComponent<T>(out T refComponent) where T : EntityComponent, new()
-        {
-            return !HasComponent<T>()
-                ? AddComponent(out refComponent)
-                : GetComponent(out refComponent);
-        }
-
         public T AddComponent<T>(out T component) where T : EntityComponent, new()
         {
             component = new T();
             _validComponents.TryAdd(typeof(T), component);
             return component;
-        }
-
-        private List<EntityComponent> GetSerializeComponents()
-        {
-            return new List<EntityComponent>(_validComponents.Values
-                .Where(component => component.GetType().IsDefined(typeof(SerializableAttribute))));
         }
     }
 }

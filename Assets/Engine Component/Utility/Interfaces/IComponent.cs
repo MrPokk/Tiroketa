@@ -2,6 +2,7 @@ using System;
 
 namespace Engine_Component.Utility.Interfaces
 {
+    [Serializable]
     public abstract class EntityComponent
     {
         public Type ID => GetType();

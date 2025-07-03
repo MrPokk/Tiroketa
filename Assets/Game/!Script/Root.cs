@@ -22,10 +22,12 @@ public class Root : RootMonoBehavior
     protected override void GStart()
     {
         //   var gridPresenter = new GridPresenter(_gridInspector);
-     //   var test = SerializerUtility.TryDeserialize<TestEntity>(new CMSSerializer(typeof(TestEntity), CMSEntityDatabase.GetPath(typeof(TestEntity))));
-
-       // print(test.HasComponent<OneTestComponent>());
+        var test = SerializerUtility.TryDeserialize<TestEntity>(new CMSSerializer(typeof(TestEntity), CMSEntityDatabase.GetPath(typeof(TestEntity))));
         
+        print(test.HasComponent<OneTestComponent>());
+        print(test.HasComponent<TwoTestComponent>());
+        
+
         var player = CMSRuntimer.GetPresenter<MobPresenter>().SpawnEntity(typeof(PlayerModel));
         player.GetModel().GetComponent(out InsideItemComponent _).GiveItem<PistolModel>(player.transform);
     }

@@ -8,7 +8,7 @@ namespace Game.TESTCMS
     {
         public TestEntity()
         {
-            AddComponent(out OneTestComponent _);
+            AddComponent(out TwoTestComponent _);
         }
     }
 }
