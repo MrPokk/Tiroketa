@@ -4,33 +4,45 @@ using UnityEngine;
 
 namespace Engine_Component.CMSSystem
 {
-    public static class CMSViewDatabase
+    public class CMSViewDatabase : CMSDatabase
     {
         private readonly static Dictionary<Type, BaseView> AllView = new Dictionary<Type, BaseView>();
 
+        private static bool _isInit;
+        private static void CheckInit()
+        {
+            if (!_isInit)
+                new CMSViewDatabase().Initialize();
+        }
+        
         public static BaseView Get(Type viewType)
         {
-            if (AllView.TryGetValue(viewType, out var viewResult))
-            {
-                if (viewResult == null)
-                    throw new ArgumentNullException($"ERROR: View is null CHECK PATH: Resources/{PathInProject.CMS_VIEWS}");
+            CheckInit();
+            
+            if (!AllView.TryGetValue(viewType, out var viewResult))
+                throw new KeyNotFoundException($"View of type {viewType.Name} not found in database");
 
-                return viewResult;
-            }
-            throw new KeyNotFoundException($"View of type {viewType.Name} not found in database");
+            if (!viewResult)
+                throw new ArgumentNullException($"ERROR: View is null CHECK PATH: Resources/{PathInProject.CMS_VIEWS}");
+
+            return viewResult;
         }
 
         public static T Get<T>() where T : BaseView
         {
+            CheckInit();
+            
             return Get(typeof(T)) as T;
         }
 
         public static IReadOnlyCollection<BaseView> GetAll()
         {
+            CheckInit();
+            
             return AllView.Values;
         }
 
-        public static void FindAll(bool forceUpdate = false)
+        public override void Initialize(bool forceUpdate = false)
         {
             try
             {
@@ -72,7 +84,7 @@ namespace Engine_Component.CMSSystem
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException($"CMSViewDatabase initialization failed: {ex.Message}");
+                throw new InvalidOperationException($"Database initialization failed: {ex.Message}", ex);
             }
         }
     }

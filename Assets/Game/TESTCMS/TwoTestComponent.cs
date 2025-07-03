@@ -5,10 +5,8 @@ using System.Xml.Serialization;
 namespace Game.TESTCMS
 {
     [Serializable]
-    [XmlInclude(typeof(TwoTestComponent))]
-    public class TwoTestComponent : EntityComponent
+    public class TwoTestComponent : IEntityComponent
     {
         public int Test;
     }
-
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Game._Script._Cms_Content
 {
-    public class ControlComponent : EntityComponent
+    public class ControlComponent : IEntityComponent
     {
         public Vector2 ReadInput;
     }

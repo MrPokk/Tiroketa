@@ -1,10 +1,12 @@
 #if UNITY_EDITOR
+using Engine_Component.System.Serialization;
+using Engine_Component.UnityIntegration.Utility;
 using UnityEditor;
 using UnityEngine;
 
 namespace Engine_Component.UnityIntegration.Editor
 {
-    public partial class CmsInspectorEditor : CMSEditorTab
+    public partial class CMSInspectorEditor : CMSEditorTab
     {
         private EditorWindow _parentWindow;
         private readonly InspectorInfoUtility _infoUtility = new InspectorInfoUtility();
@@ -51,14 +53,13 @@ namespace Engine_Component.UnityIntegration.Editor
                 return;
             }
 
-            var textStyleComponent = new GUIStyle (GUI.skin.label)
+            var textStyleComponent = new GUIStyle(GUI.skin.label)
             {
                 fontStyle = FontStyle.Bold,
                 fontSize = 12,
             };
-            
-            
-            var textStyleHeader = new GUIStyle (GUI.skin.label)
+
+            var textStyleHeader = new GUIStyle(GUI.skin.label)
             {
                 fontStyle = FontStyle.Bold,
                 fontSize = 16,
@@ -74,7 +75,7 @@ namespace Engine_Component.UnityIntegration.Editor
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Components", textStyleHeader);
 
-            foreach (var component in _infoUtility.DeserializedEntity.AllSerializeComponents)
+            foreach (var component in _infoUtility.DeserializedEntity.GetSerializeComponents())
             {
                 EditorGUILayout.BeginVertical(GUI.skin.box);
                 {
@@ -89,13 +90,15 @@ namespace Engine_Component.UnityIntegration.Editor
         private void PanelXmlEditor()
         {
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField("XML Content", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("XML Content (Read Only)", EditorStyles.boldLabel);
 
             var styleWindow = new GUIStyle(EditorStyles.textArea)
-                { wordWrap = true, };
+            {
+                wordWrap = true,
+                normal = new GUIStyleState() { textColor = Color.gray }
+            };
 
-            _infoUtility.XMLText = EditorGUILayout.TextArea(
-                _infoUtility.XMLText, styleWindow);
+            EditorGUILayout.SelectableLabel(_infoUtility.XMLText, styleWindow, GUILayout.ExpandHeight(true));
         }
 
         private void ShowErrorMessage()
@@ -122,7 +125,7 @@ namespace Engine_Component.UnityIntegration.Editor
             {
                 var fileInField = EditorGUILayout.ObjectField("XML File", _infoUtility.SelectedXmlAsset, typeof(TextAsset), false) as TextAsset;
 
-                if (fileInField && fileInField != _infoUtility.SelectedXmlAsset && IsXmlFile(fileInField))
+                if (fileInField && fileInField != _infoUtility.SelectedXmlAsset && UnityXmlConverter.IsXmlFile(fileInField))
                 {
                     _infoUtility.SelectedXmlAsset = fileInField;
                     _infoUtility.XMLText = _infoUtility.SelectedXmlAsset.text;
@@ -139,9 +142,15 @@ namespace Engine_Component.UnityIntegration.Editor
             {
                 if (GUILayout.Button("Save"))
                 {
-                    SaveXml(_infoUtility.SelectedXmlAsset, _infoUtility.XMLText);
-                    UpdateInfo();
-                    _parentWindow.Repaint();
+                    if (_infoUtility.DeserializedEntity != null)
+                    {
+                        _infoUtility.XMLText = SerializerUtility.TrySerialize(
+                            _infoUtility.DeserializedEntity,
+                            AssetDatabase.GetAssetPath(_infoUtility.SelectedXmlAsset));
+                        AssetDatabase.Refresh();
+                        UpdateInfo();
+                        _parentWindow.Repaint();
+                    }
                 }
             }
             EditorGUILayout.EndHorizontal();

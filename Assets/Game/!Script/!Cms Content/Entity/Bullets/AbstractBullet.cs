@@ -1,6 +1,5 @@
 using Engine_Component.CMSSystem;
-using Engine_Component.UnityIntegration.BaseComponent;
-using Game._Script._Cms_Content.Components;
+using Engine_Component.UnityIntegration.CMSComponent;
 using Game._Script.CMSGame.Components;
 using UnityEngine;
 

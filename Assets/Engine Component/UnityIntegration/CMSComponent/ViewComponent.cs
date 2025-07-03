@@ -2,10 +2,10 @@ using Engine_Component.CMSSystem;
 using Engine_Component.Utility.Interfaces;
 using System;
 
-namespace Engine_Component.UnityIntegration.BaseComponent
+namespace Engine_Component.UnityIntegration.CMSComponent
 {
    
-    public class ViewComponent : EntityComponent, IInitializableToArg<ViewComponent.ViewProperty>
+    public class ViewComponent : IEntityComponent, IInitializableToArg<ViewComponent.ViewProperty>
     {
         public ViewProperty Properties { get; set; }
 
@@ -24,8 +24,6 @@ namespace Engine_Component.UnityIntegration.BaseComponent
             [NonSerialized] private BaseView _current;  
             public BaseView Current { get => _current ??= CMSViewDatabase.Get(ViewType); set => _current = value; }
             public BaseView Original => CMSViewDatabase.Get(ViewType);
-
-            public ViewProperty() { } 
 
             public ViewProperty(BaseView variableView)
             {

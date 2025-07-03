@@ -1,5 +1,4 @@
 
-
     interface IInitInMain
     {
         public void Init();

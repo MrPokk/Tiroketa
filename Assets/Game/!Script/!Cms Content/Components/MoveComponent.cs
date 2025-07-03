@@ -5,7 +5,7 @@ using System.Data;
 
 namespace Game._Script.CMSGame.Components
 {
-    public class MoveComponent : EntityComponent, IInitializableToArg<MoveComponent.MoveProperty>
+    public class MoveComponent : IEntityComponent, IInitializableToArg<MoveComponent.MoveProperty>
     {
 
         public MoveProperty Properties { get; set; }

@@ -2,8 +2,8 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using UnityEditor;
 using UnityEngine;
+
 
 namespace Engine_Component.Utility
 {
@@ -16,14 +16,13 @@ namespace Engine_Component.Utility
         {
             try
             {
-                var allPath = PathUtility.GetAllPaths();
+                var allPath = GetAllPaths();
                 foreach (var path in allPath)
                 {
-                    var finalPath = PathUtility.GetFullPath(path);   
+                    var finalPath = GetFullPath(path);   
                     if (!Directory.Exists(finalPath))
                         Directory.CreateDirectory(finalPath);
                 }
-                AssetDatabase.Refresh();
             }
             catch (Exception ex)
             {
@@ -66,7 +65,7 @@ namespace Engine_Component.Utility
                 throw new ArgumentException("ERROR: Path not found");
 
             var fullPath = $"{Application.dataPath}/!{Application.productName}/{extraPath}/{pathBase}";
-
+            
             return fullPath;
         }
 
@@ -112,9 +111,9 @@ namespace Engine_Component.Utility
         {
             try
             {
-                var permissiontFile = Path.Combine(directoryPath, Guid.NewGuid().ToString());
-                File.WriteAllText(permissiontFile, "Permission");
-                File.Delete(permissiontFile);
+                var permissionFile = Path.Combine(directoryPath, Guid.NewGuid().ToString());
+                File.WriteAllText(permissionFile, "Permission");
+                File.Delete(permissionFile);
                 return true;
             }
             catch

@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Engine_Component.UnityIntegration.Editor
 {
-    public class CmsDatabaseEditor : CMSEditorTab
+    public class CMSDatabaseEditor : CMSEditorTab
     {
         public override void Draw()
         {

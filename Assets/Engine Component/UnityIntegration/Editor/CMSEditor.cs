@@ -13,9 +13,9 @@ namespace Engine_Component.CMSSystem
         // The order of rendering depends on the index
         private readonly static Dictionary<(int index, string name), CMSEditorTab> Tabs = new Dictionary<(int, string), CMSEditorTab>()
         {
-            { (0, "Database"), new CmsDatabaseEditor() },
-            { (1, "Inspector"), new CmsInspectorEditor() },
-            { (2, "Settings"), new CmsSettingEditor() }
+            { (0, "Database"), new CMSDatabaseEditor() },
+            { (1, "Inspector"), new CMSInspectorEditor() },
+            { (2, "Settings"), new CMSSettingEditor() }
         };
         private int _currentTabIndex = 0;
         private bool _forceUpdate = false;

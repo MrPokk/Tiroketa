@@ -1,9 +1,10 @@
 #if UNITY_EDITOR
+using Engine_Component.UnityIntegration.Utility;
 using UnityEditor;
 
 namespace Engine_Component.UnityIntegration.Editor
 {
-    public partial class CmsInspectorEditor
+    public partial class CMSInspectorEditor
     {
         public override void OnEnable(EditorWindow editorWindow)
         {
@@ -18,12 +19,19 @@ namespace Engine_Component.UnityIntegration.Editor
 
         private void UpdateInfo()
         {
-            if (!TryGetSelectedXmlFile(out var selectedFile))
-                return;
-            
-            _infoUtility.SelectedXmlAsset = selectedFile;
-            _infoUtility.XMLText = _infoUtility.SelectedXmlAsset.text;
-            _infoUtility.DeserializedEntity = GetDeserializedEntity();
+            if (UnityXmlConverter.TryGetSelectedXmlFile(out var selectedFile))
+            {
+                _infoUtility.SelectedXmlAsset = selectedFile;
+                _infoUtility.XMLText = _infoUtility.SelectedXmlAsset.text;
+                _infoUtility.DeserializedEntity = GetDeserializedEntity();
+            }
+            else
+            {
+                _infoUtility.SelectedXmlAsset = null;
+                _infoUtility.XMLText = null;
+                _infoUtility.DeserializedEntity = null;
+            }
+        
         }
     }
 }

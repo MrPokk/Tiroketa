@@ -4,7 +4,7 @@ using System.Data;
 
 namespace Game._Script.CMSGame.Components
 {
-    public class DamageComponent : EntityComponent, IInitializableToArg<DamageComponent.DamageProperty>
+    public class DamageComponent : IEntityComponent, IInitializableToArg<DamageComponent.DamageProperty>
     {
         public DamageProperty Properties { get; set; }
 

@@ -4,30 +4,42 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using UnityEngine;
 
 namespace Engine_Component.CMSSystem
 {
-    public static class CMSEntityDatabase
+    public class CMSEntityDatabase : CMSDatabase
     {
         private readonly static Dictionary<Type, string> AllEntity = new Dictionary<Type, string>();
-
+        
+        private static bool _isInit;
+        private static void CheckInit()
+        {
+            if (!_isInit)
+                new CMSEntityDatabase().Initialize();
+        }
+        
         public static string GetPath(Type typeEntity)
         {
+            CheckInit();
+            
             return AllEntity.GetValueOrDefault(typeEntity);
         }
 
         public static string GetPath<T>() where T : CMSEntity
         {
+            CheckInit();
+            
             return GetPath(typeof(T));
         }
 
         public static IReadOnlyDictionary<Type, string> GetAll()
         {
+            CheckInit();
+            
             return AllEntity;
         }
 
-        public static void FindAll(bool forceUpdate = false)
+        public override void Initialize(bool forceUpdate = false)
         {
             try
             {
@@ -44,9 +56,9 @@ namespace Engine_Component.CMSSystem
 
                     if (!File.Exists(fullPath) || forceUpdate)
                     {
-                        var pathToEntity = SerializerUtility.TrySerialize(new CMSSerializer(typeEntity, fullPath));
+                       SerializerUtility.TrySerialize(typeEntity, fullPath);
 
-                        AllEntity.TryAdd(typeEntity, pathToEntity);
+                        AllEntity.TryAdd(typeEntity, fullPath);
                     }
                     else
                     {
@@ -56,7 +68,7 @@ namespace Engine_Component.CMSSystem
             }
             catch (Exception ex)
             {
-                throw new InvalidOperationException($"CMSEntityDatabase initialization failed: {ex.Message}", ex);
+                throw new InvalidOperationException($"Database initialization failed: {ex.Message}", ex);
             }
         }
     }

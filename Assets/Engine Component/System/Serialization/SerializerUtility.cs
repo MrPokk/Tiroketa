@@ -1,32 +1,38 @@
+using Engine_Component.Utility.Interfaces;
 using System;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Xml;
 using System.Xml.Serialization;
-using FileNotFoundException = System.IO.FileNotFoundException;
 
 namespace Engine_Component.System.Serialization
 {
     public static class SerializerUtility
     {
-        public static string TrySerialize(ISerializerProvider serializerProvider)
+
+        public static string TrySerialize(object objectValue, string fullPath)
+        {
+            ValidationPath(fullPath);
+
+            using var fileStream = new FileStream(fullPath, FileMode.Open);
+
+            GetXmlSerializer(objectValue).Serialize(fileStream, objectValue);
+            return null;
+        }
+
+        public static string TrySerialize(Type typeSerializer, string fullPath)
         {
             try
             {
-                var typeObject = serializerProvider.GetObjectType();
-                var fullPath = serializerProvider.GetFullPath();
+                if (typeSerializer.IsAbstract)
+                    throw new ArgumentException($"ERROR: {typeSerializer} is Abstract");
 
-                if (typeObject.IsAbstract)
-                    throw new ArgumentException($"ERROR: {typeObject} is Abstract");
-
-                if (fullPath == null || !File.Exists(fullPath))
-                    throw new AggregateException("ERROR: path not valid");
-
-                var serializer = GetSerializer(serializerProvider, out var instanceObject);
+                ValidationPath(fullPath);
 
                 using var fileStream = new FileStream(fullPath, FileMode.Create);
-                serializer?.Serialize(fileStream, instanceObject);
+
+                GetXmlSerializer(typeSerializer, out var instanceObject)?.Serialize(fileStream, instanceObject);
 
                 return fullPath;
             }
@@ -36,25 +42,22 @@ namespace Engine_Component.System.Serialization
             }
         }
 
-        public static object TryDeserialize(ISerializerProvider serializerProvider)
+        public static string TrySerialize(ISerializerProvider serializerProvider)
+        {
+            return serializerProvider.Serialization();
+        }
+
+        public static object TryDeserialize(Type typeSerializer, string fullPath)
         {
             try
             {
-                var filePath = serializerProvider.GetFullPath();
+                ValidationPath(fullPath);
 
-                if (!File.Exists(filePath))
-                    throw new FileNotFoundException($"File not found: {filePath}");
+                var serializer = GetXmlSerializer(typeSerializer, out var instanceObject);
 
-                var serializer = GetSerializer(serializerProvider, out var instanceObject);
+                using var fileStream = new FileStream(fullPath, FileMode.Open);
 
-                if (instanceObject.GetType() != serializerProvider.GetObjectType())
-                    throw new TypeAccessException($"ERROR: object {instanceObject} in not type Params");
-                
-                using var fileStream = new FileStream(filePath, FileMode.Open);
-
-                var objectDeserialize = serializer.Deserialize(fileStream);
-                
-                return objectDeserialize;
+                return serializer.Deserialize(fileStream);
             }
             catch (SerializationException ex)
             {
@@ -62,16 +65,24 @@ namespace Engine_Component.System.Serialization
             }
         }
 
-        public static T TryDeserialize<T>(ISerializerProvider serializerProvider) where T : class
+        public static object TryDeserialize(ISerializerProvider serializerProvider)
+        {
+            return serializerProvider.Deserialize();
+        }
+
+        public static T TryDeserialize<T>(string fullPath) where T : class, new()
+        {
+            return TryDeserialize(typeof(T), fullPath) as T;
+        }
+
+        public static T TryDeserialize<T>(ISerializerProvider serializerProvider) where T : class, new()
         {
             return TryDeserialize(serializerProvider) as T;
         }
 
-
         public static Type GetTypeFromXmlFile(string xmlFilePath, Type typeComparison = null)
         {
-            if (!File.Exists(xmlFilePath))
-                throw new FileNotFoundException($"XML file not found at path: {xmlFilePath}", xmlFilePath);
+            ValidationPath(xmlFilePath);
 
             try
             {
@@ -113,11 +124,35 @@ namespace Engine_Component.System.Serialization
             }
         }
 
-        private static XmlSerializer GetSerializer(ISerializerProvider serializerProvider, out object instanceObject)
+        private static XmlSerializer GetXmlSerializer(Type typeSerializer, out object instanceObject)
         {
-            var valueObject = Activator.CreateInstance(serializerProvider.GetObjectType());
-            instanceObject = valueObject;
-            return serializerProvider.Serialization(ref valueObject);
+            XmlSerializer serializer;
+            
+            instanceObject = Activator.CreateInstance(typeSerializer);
+            if (instanceObject is IXmlIncludeExtraType includeExtraType)
+                serializer = new XmlSerializer(typeSerializer, includeExtraType.GetExtraType());
+
+            else
+                serializer = new XmlSerializer(typeSerializer);
+
+            return serializer;
+        }
+
+        private static XmlSerializer GetXmlSerializer(object objectValue)
+        {
+            XmlSerializer serializer;
+            if (objectValue is IXmlIncludeExtraType includeExtraType)
+                serializer = new XmlSerializer(objectValue.GetType(), includeExtraType.GetExtraType());
+            else
+                serializer = new XmlSerializer(objectValue.GetType());
+
+            return serializer;
+        }
+
+        private static void ValidationPath(string fullPath)
+        {
+            if (fullPath == null || !File.Exists(fullPath))
+                throw new AggregateException($"ERROR: path not valid: {fullPath}");
         }
     }
 }

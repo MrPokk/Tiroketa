@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Game._Script.CMSGame.Components
 {
-    public class InsideItemComponent : EntityComponent
+    public class InsideItemComponent : IEntityComponent
     {
         public CMSEntity ContainItem { get; private set; }
         public void GiveItem<TEntity>() where TEntity : CMSEntity, new()

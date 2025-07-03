@@ -3,7 +3,7 @@ using System;
 
 namespace Game._Script.CMSGame.Components
 {
-    public class AttackComponent : EntityComponent, IInitializableToArg<AttackComponent.AttackProperty>
+    public class AttackComponent : IEntityComponent, IInitializableToArg<AttackComponent.AttackProperty>
     {
         public AttackProperty Properties { get; set; }
 

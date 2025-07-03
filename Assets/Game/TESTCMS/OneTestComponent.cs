@@ -4,7 +4,7 @@ using System;
 namespace Game.TESTCMS
 {
     [Serializable]
-    public class OneTestComponent : EntityComponent
+    public class OneTestComponent : IEntityComponent
     {
         public int TestValue = 10;
         public int TestDsds = 540;

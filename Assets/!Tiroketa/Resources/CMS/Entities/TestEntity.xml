@@ -1,10 +1,8 @@
 <?xml version="1.0"?>
-<TestEntity>
-  <Components>
-    <Component type="Game.TESTCMS.TwoTestComponent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <TwoTestComponent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-        <Test>87</Test>
-      </TwoTestComponent>
-    </Component>
-  </Components>
+<TestEntity xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Component xsi:type="TwoTestComponent" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <TwoTestComponent xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <Test>523</Test>
+    </TwoTestComponent>
+  </Component>
 </TestEntity>

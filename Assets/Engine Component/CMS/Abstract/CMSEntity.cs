@@ -1,5 +1,5 @@
-using Engine_Component.UnityIntegration.BaseComponent;
-using Engine_Component.Utility;
+using Engine_Component.System.Serialization;
+using Engine_Component.UnityIntegration.CMSComponent;
 using Engine_Component.Utility.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -8,20 +8,15 @@ using System.Reflection;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-using UnityEngine;
 
 namespace Engine_Component.CMSSystem
 {
-    public abstract class CMSEntity : IInitializableToArg<CMSPresenter.CMSPresenterProperty>
+    public abstract class CMSEntity : IInitializableToArg<CMSPresenter.CMSPresenterProperty>, IXmlIncludeExtraType, IXmlSerializable
     {
         [XmlIgnore]
         public Type ID => GetType();
 
-        private readonly Dictionary<Type, EntityComponent> _validComponents = new Dictionary<Type, EntityComponent>();
-
-        [XmlArray("Components")]
-        [XmlArrayItem("Component", Type = typeof(EntityComponent))]
-        public List<EntityComponent> AllSerializeComponents => GetSerializeComponents();
+        private readonly Dictionary<Type, IEntityComponent> _validComponents = new Dictionary<Type, IEntityComponent>();
 
         [XmlIgnore]
         public CMSPresenter.CMSPresenterProperty Properties { get; set; }
@@ -30,7 +25,7 @@ namespace Engine_Component.CMSSystem
         {
             Properties ??= args;
         }
-        
+
         public BaseView GetView()
         {
             return GetComponent(out ViewComponent _)?.Properties?.Current;
@@ -41,18 +36,18 @@ namespace Engine_Component.CMSSystem
             return GetView() as T;
         }
 
+        public IReadOnlyDictionary<Type, IEntityComponent> GetAllComponent()
+        {
+            return _validComponents;
+        }
+
         public T GetUnityComponent<T>() where T : UnityEngine.Component
         {
             var view = GetView();
             return view != null ? view.GetComponent<T>() : null;
         }
 
-        public IReadOnlyDictionary<Type, EntityComponent> GetAllComponent()
-        {
-            return _validComponents;
-        }
-
-        public T GetComponent<T>(out T refComponent) where T : EntityComponent
+        public T GetComponent<T>(out T refComponent) where T : class, IEntityComponent
         {
             if (_validComponents.TryGetValue(typeof(T), out var component))
             {
@@ -63,28 +58,30 @@ namespace Engine_Component.CMSSystem
             return null;
         }
 
-        public T GetOrAddComponent<T>(out T refComponent) where T : EntityComponent, new()
+        public T GetComponent<T>() where T : class, IEntityComponent
+        {
+            if (_validComponents.TryGetValue(typeof(T), out var component))
+            {
+                return (T)component;
+            }
+            return null;
+        }
+
+        public T GetOrAddComponent<T>() where T : class, IEntityComponent, new()
+        {
+            return !HasComponent<T>()
+                ? AddComponent<T>()
+                : GetComponent<T>();
+        }
+
+        public T GetOrAddComponent<T>(out T refComponent) where T : class, IEntityComponent, new()
         {
             return !HasComponent<T>()
                 ? AddComponent(out refComponent)
                 : GetComponent(out refComponent);
         }
 
-        public bool TryGetSerializeComponentTypes(out Type[] allSerialize)
-        {
-            var allSerializableComponent = AllSerializeComponents.Select(component => component.GetType()).ToArray();
-
-            allSerialize = allSerializableComponent;
-            return allSerializableComponent.Any();
-        }
-
-        public List<EntityComponent> GetSerializeComponents()
-        {
-            return new List<EntityComponent>(_validComponents.Values
-                .Where(component => component.GetType().IsDefined(typeof(SerializableAttribute))));
-        }
-
-        public void RemoveComponent<T>() where T : EntityComponent
+        public void RemoveComponent<T>() where T : IEntityComponent
         {
             _validComponents.Remove(typeof(T));
         }
@@ -94,16 +91,50 @@ namespace Engine_Component.CMSSystem
             return _validComponents.ContainsKey(typeComponent);
         }
 
-        public bool HasComponent<T>() where T : EntityComponent
+        public bool HasComponent<T>() where T : IEntityComponent
         {
             return _validComponents.ContainsKey(typeof(T));
         }
 
-        public T AddComponent<T>(out T component) where T : EntityComponent, new()
+        public T AddComponent<T>(out T component) where T : IEntityComponent, new()
         {
             component = new T();
             _validComponents.TryAdd(typeof(T), component);
             return component;
         }
+
+        public T AddComponent<T>() where T : IEntityComponent, new()
+        {
+            var component = new T();
+            _validComponents.TryAdd(typeof(T), component);
+            return component;
+        }
+
+        #region [XmlSerializable]
+
+        public XmlSchema GetSchema() => null;
+        public void ReadXml(XmlReader reader)
+        {
+            SerializerCMSEntityUtility.ReadXml(reader, (type, component) => {
+                
+                _validComponents[type] = component;
+            });
+        }
+        public void WriteXml(XmlWriter writer)
+        {
+            SerializerCMSEntityUtility.WriteXml(writer, GetSerializeComponents());
+        }
+
+        public Type[] GetExtraType()
+        {
+            return GetSerializeComponents().Select(component => component.GetType()).ToArray();
+        }
+        
+        public List<IEntityComponent> GetSerializeComponents()
+        {
+            return new List<IEntityComponent>(_validComponents.Values
+                .Where(component => component.GetType().IsDefined(typeof(SerializableAttribute))));
+        }
+        #endregion
     }
 }

@@ -1,4 +1,4 @@
-using Engine_Component.UnityIntegration.BaseComponent;
+using Engine_Component.UnityIntegration.CMSComponent;
 using Engine_Component.Utility.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -182,7 +182,7 @@ namespace Engine_Component.CMSSystem
             return list;
         }
 
-        public IReadOnlyCollection<CMSEntity> GetEntitiesToComponent<TComponent>() where TComponent : EntityComponent
+        public IReadOnlyCollection<CMSEntity> GetEntitiesToComponent<TComponent>() where TComponent : IEntityComponent
         {
             return GetModelEntities().Where(entity => entity.HasComponent<TComponent>()).ToList();
         }

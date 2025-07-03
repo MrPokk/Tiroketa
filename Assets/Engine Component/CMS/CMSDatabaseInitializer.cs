@@ -1,5 +1,5 @@
-
 using Engine_Component.Utility;
+using System;
 
 namespace Engine_Component.CMSSystem
 {
@@ -14,8 +14,12 @@ namespace Engine_Component.CMSSystem
 
         public static void UpdateDatabase(bool forceUpdate = false)
         {
-            CMSViewDatabase.FindAll(forceUpdate);
-            CMSEntityDatabase.FindAll(forceUpdate);
+            var allDatabase = ReflectionUtility.FindAllImplement<CMSDatabase>();
+            foreach (var database in allDatabase)
+            {
+                if (Activator.CreateInstance(database) is CMSDatabase newDatabase)
+                    newDatabase.Initialize(forceUpdate);
+            }
         }
     }
 }

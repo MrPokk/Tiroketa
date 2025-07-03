@@ -4,7 +4,7 @@ using System;
 namespace Game._Script._Cms_Content.Components
 {
     [Serializable]
-    public class DestroyTimeComponent : EntityComponent
+    public class DestroyTimeComponent : IEntityComponent
     {
         public float TotalTime;
         

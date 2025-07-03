@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Engine_Component.UnityIntegration.Editor
 {
-    public class DrawFieldsUtility
+    static class DrawFieldsUtility
     {
         public static void DrawFieldsForObject(object target)
         {
