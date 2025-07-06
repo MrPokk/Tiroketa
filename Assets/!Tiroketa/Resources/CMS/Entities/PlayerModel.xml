@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<PlayerModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Component xsi:type="HealthComponent" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <HealthComponent xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <MaxHealth>10</MaxHealth>
+      <HealthCurrent>10</HealthCurrent>
+    </HealthComponent>
+  </Component>
+  <Component xsi:type="MoveComponent" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <MoveComponent xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <Speed>5</Speed>
+    </MoveComponent>
+  </Component>
+</PlayerModel>
