@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<StandardBulletModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Component xsi:type="MoveComponent" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <MoveComponent xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <Speed>1</Speed>
+    </MoveComponent>
+  </Component>
+  <Component xsi:type="DestroyTimeComponent" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <DestroyTimeComponent xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <TotalTime>2</TotalTime>
+    </DestroyTimeComponent>
+  </Component>
+  <Component xsi:type="DamageComponent" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <DamageComponent xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <ApplyDamage>0</ApplyDamage>
+    </DamageComponent>
+  </Component>
+</StandardBulletModel>
