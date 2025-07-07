@@ -197,33 +197,45 @@ namespace BitterCMS.CMSSystem
         {
             return GetEntities().Values as IReadOnlyCollection<CMSEntity>;
         }
-
-        public List<CMSEntity> GetEntitiesToComponent(params Type[] typeComponent)
+        
+        public CMSEntity[] GetEntitiesToComponent(
+            Type[] requiredComponents = null, 
+            Type[] excludedComponents = null)
         {
             var allEntity = GetModelEntities();
-            var all = new List<CMSEntity>();
-
-            foreach (var entity in allEntity)
+    
+            return allEntity.Where(entity => 
             {
-                var hasAllComponents = true;
-                foreach (var component in typeComponent)
-                {
-                    if (entity.HasComponent(component))
-                        continue;
+                var hasRequired = requiredComponents == null || 
+                                  requiredComponents.All(entity.HasComponent);
+        
+                var hasExcluded = excludedComponents != null && 
+                                  excludedComponents.Any(entity.HasComponent);
+        
+                return hasRequired && !hasExcluded;
+            }).ToArray();
+        }
 
-                    hasAllComponents = false;
-                    break;
-                }
+        public IReadOnlyCollection<CMSEntity> GetEntitiesToComponent<TRequired, TExcluded>() 
+            where TRequired : IEntityComponent 
+            where TExcluded : IEntityComponent
+        {
+            return GetModelEntities()
+                .Where(entity => entity.HasComponent<TRequired>() && !entity.HasComponent<TExcluded>())
+                .ToArray();
+        }
+        
+        public CMSEntity[] GetEntitiesToComponent(params Type[] typeComponent)
+        {
+            var allEntity = GetModelEntities();
 
-                if (hasAllComponents)
-                    all.Add(entity);
-            }
-            return all;
+            return (from entity in allEntity let hasAllComponents = 
+                typeComponent.All(entity.HasComponent) where hasAllComponents select entity).ToArray();
         }
 
         public IReadOnlyCollection<CMSEntity> GetEntitiesToComponent<TComponent>() where TComponent : IEntityComponent
         {
-            return GetModelEntities().Where(entity => entity.HasComponent<TComponent>()).ToList();
+            return GetModelEntities().Where(entity => entity.HasComponent<TComponent>()).ToArray();
         }
 
         #endregion

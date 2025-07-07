@@ -1,6 +1,5 @@
 using Game._Script.Interaction;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Game._Script.GunComponent
 {

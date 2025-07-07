@@ -1,9 +1,11 @@
+using _Tiroketa._Script._Cms_Content.Components;
 using BitterCMS.CMSSystem;
 using BitterCMS.UnityIntegration.CMSComponent;
 using Game._Script._Cms_Content.Entity.Bullets;
 using Game._Script._Cms_Content.Entity.Weapons;
 using Game._Script._Cms_Content.View.Weapons;
 using Game._Script.CMSGame.Components;
+using Game._Script.Interaction;
 using Game._Script.Presenters;
 
 namespace Game._Script._Cms_Content.Entity.Weapon
@@ -14,11 +16,13 @@ namespace Game._Script._Cms_Content.Entity.Weapon
         {
             AddComponent(out ViewComponent _).Init(new(CMSViewDatabase.Get<WeaponDebugView>()));
             AddComponent(out AttackProcessComponent _).Init(new(AttackProcess));
+            AddComponent(out LookAtComponent _);
         }
         private void AttackProcess()
         {
             var bullet = CMSRuntimer.GetPresenter<BulletPresenter>().SpawnFromDB(
                 typeof(StandardBulletModel), position: GetView().transform.position);
+
             bullet.GetModel<AbstractBullet>().Launch(GetView().transform);
         }
     }

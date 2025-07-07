@@ -15,7 +15,7 @@ namespace Game._Script.GridComponent
 
         public bool TryGetPositionInGrid(Vector2Int indexNode, out Vector3 positionValue)
         {
-            if (IsWithinGrid(indexNode))
+            if (IsWithGrid(indexNode))
             {
                 positionValue = new Vector3(indexNode.x, indexNode.y, 0) * _gridModel.CellSize + (Vector3)_gridModel.PositionOrigin;
                 return true;
@@ -27,7 +27,7 @@ namespace Game._Script.GridComponent
 
         public bool TryGetPositionInGrid(Vector3 objectPosition, out Vector2Int positionValue)
         {
-            if (!IsWithinGrid(ConvertingPosition(objectPosition)))
+            if (!IsWithGrid(ConvertingPosition(objectPosition)))
             {
                 positionValue = Vector2Int.one * int.MinValue;
                 return false;
@@ -38,50 +38,62 @@ namespace Game._Script.GridComponent
             positionValue = new Vector2Int(X, Y);
             return true;
         }
-        
-        public void SetValueInGrid(Vector2Int index, T value)
+
+        public void SetValue(Vector2Int index, T value)
         {
-            if (IsWithinGrid(index))
-            {
-                _gridModel.Array[index.x, index.y] = value;
-            }
-        }
-        
-        public void SetValueInGrid(Vector3 positionWorld, T value)
-        {
-            SetValueInGrid(ConvertingPosition(positionWorld),value);
+            if (!IsWithGrid(index))
+                return;
+
+            _gridModel.Array[index.x, index.y] = value;
         }
 
-        public T GetNodeByIndex(Vector2Int index)
+        public void SetValue(Vector3 positionWorld, T value)
         {
-            return _gridModel.Array[index.x, index.y];
+            SetValue(ConvertingPosition(positionWorld), value);
         }
+
+        public bool HasValue(Vector2Int index)
+        {
+            return GetValue(index) != null;
+        }
+
+        public bool HasValue(Vector3 positionWorld)
+        {
+            return GetValue(positionWorld) != null;
+        }
+
+        public T GetValue(Vector2Int index)
+        {
+            return IsWithGrid(index) ? _gridModel.Array[index.x, index.y] : default;
+        }
+
+        public T GetValue(Vector3 positionWorld) => GetValue(ConvertingPosition(positionWorld));
 
         public Vector3 ConvertingPosition(Vector2Int index)
         {
             return new Vector3(index.x, index.y, 0) * _gridModel.CellSize + (Vector3)_gridModel.PositionOrigin;
         }
-        
+
         public Vector2Int ConvertingPosition(Vector3 worldPose)
         {
             int X = Mathf.FloorToInt((worldPose - (Vector3)_gridModel.PositionOrigin).x / _gridModel.CellSize);
             int Y = Mathf.FloorToInt((worldPose - (Vector3)_gridModel.PositionOrigin).y / _gridModel.CellSize);
             return new Vector2Int(X, Y);
         }
-        
-        public bool IsWithinGrid(Vector2Int indexNode)
+
+        public bool IsWithGrid(Vector2Int indexNode)
         {
             return indexNode.x >= 0 && indexNode.x < _gridModel.Size.x && indexNode.y >= 0 && indexNode.y < _gridModel.Size.y;
         }
-        
-        public bool IsWithinGrid(Vector2 positionWorld)
+
+        public bool IsWithGrid(Vector2 positionWorld)
         {
-            return IsWithinGrid(ConvertingPosition(positionWorld));
+            return IsWithGrid(ConvertingPosition(positionWorld));
         }
-        
-        public bool IsWithinGrid(Vector3 positionWorld)
+
+        public bool IsWithGrid(Vector3 positionWorld)
         {
-            return IsWithinGrid(ConvertingPosition(positionWorld));
+            return IsWithGrid(ConvertingPosition(positionWorld));
         }
     }
 }

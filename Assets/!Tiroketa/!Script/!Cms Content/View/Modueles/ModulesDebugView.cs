@@ -8,15 +8,19 @@ namespace _Tiroketa._Script._Cms_Content.View.Modueles
 {
     public class ModulesDebugView : BaseView, IDragHandler, IDropHandler, IBeginDragHandler
     {
-        
+
         public void OnBeginDrag(PointerEventData eventData)
         {
             var transformObject = eventData.pointerDrag.transform;
 
             var grid = G.GetRoot<Root>().GridPresenter;
-            grid.SetValueInGrid(transformObject.position, null);
+
+            var module = eventData.pointerDrag.GetComponent<BaseView>().GetModel<AbstractModule>();
+
+            if (grid.GetValue(transformObject.position) == module)
+                grid.SetValue(transformObject.position, null);
         }
-        
+
         public void OnDrag(PointerEventData eventData)
         {
             var positionMouseToWorld = G.GetRoot<Root>().Camera.ScreenToWorldPoint(Mouse.current.position.value);
@@ -34,12 +38,13 @@ namespace _Tiroketa._Script._Cms_Content.View.Modueles
 
             var grid = G.GetRoot<Root>().GridPresenter;
             var transformObject = eventData.pointerDrag.transform;
-            if (!grid.IsWithinGrid(transformObject.position))
+            var positionInGrid = grid.ConvertingPosition(transformObject.position);
+
+            if (grid.HasValue(positionInGrid) || !grid.IsWithGrid(positionInGrid))
                 return;
 
-            grid.SetValueInGrid(transformObject.position, module);
+            grid.SetValue(transformObject.position, module);
 
-            var positionInGrid = grid.ConvertingPosition(transformObject.position);
             var offset = (Vector2)transformObject.localScale / 2;
             transformObject.position = (Vector2)grid.ConvertingPosition(positionInGrid) + offset;
         }

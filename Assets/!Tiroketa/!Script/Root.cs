@@ -26,13 +26,13 @@ public class Root : RootMonoBehavior
         GridPresenter = new GridPresenter<AbstractModule>(GridInspector);
 
         var player = CMSRuntimer.GetPresenter<MobPresenter>().SpawnFromDB(typeof(PlayerModel));
-        
+
         var debugEnemy = CMSRuntimer.GetPresenter<MobPresenter>().SpawnFromDB(typeof(DebugEnemy));
-        
+
         CMSRuntimer.GetPresenter<ModulesPresenter>().SpawnFromDB(typeof(DamageModule));
         CMSRuntimer.GetPresenter<ModulesPresenter>().SpawnFromDB(typeof(DamageModule));
 
         player.GetModel().GetComponent(out InsideItemComponent _).GiveItem<PistolModel>(player.transform);
-      //  debugEnemy.GetModel().GetComponent(out InsideItemComponent _).GiveItem<PistolModel>(debugEnemy.transform);
+        debugEnemy.GetModel().GetComponent(out InsideItemComponent _).GiveItem<PistolModel>(debugEnemy.transform);
     }
 }

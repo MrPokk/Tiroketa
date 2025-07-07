@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 23831644523863545}
   - component: {fileID: 1125275814430302136}
   - component: {fileID: 924217544419316547}
-  - component: {fileID: 504138430522288767}
   m_Layer: 0
   m_Name: WeaponDebugView
   m_TagString: Untagged
@@ -101,17 +100,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a56213c25dc4a6dbaab5349e50892ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &504138430522288767
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7343422067171424614}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb197ccb4db6485da3d37d34fb99fd86, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _rotationRadius: 1
-  _rotationSpeed: 10

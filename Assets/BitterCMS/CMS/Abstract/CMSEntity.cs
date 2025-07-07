@@ -25,7 +25,20 @@ namespace BitterCMS.CMSSystem
 
         public void Init(CMSPresenter.CMSPresenterProperty args) => Properties ??= args;
 
-        public BaseView GetView() => GetComponent<ViewComponent>().Properties.Current;
+        public bool TryGetView(out BaseView view)
+        {
+            if (TryGetComponent(out ViewComponent viewComponent) && 
+                viewComponent.Properties != null)
+            {
+                view = viewComponent.Properties.Current;
+                return view;
+            }
+
+            view = null;
+            return false;
+        }
+        
+        public BaseView GetView() => GetComponent<ViewComponent>()?.Properties?.Current;
 
         public T GetView<T>() where T : BaseView => GetView() as T;
 
@@ -37,6 +50,18 @@ namespace BitterCMS.CMSSystem
             return view != null ? view.GetComponent<T>() : null;
         }
 
+        public bool TryGetComponent<T>(out T refComponent) where T : class, IEntityComponent
+        {
+            if (_validComponents.TryGetValue(typeof(T), out var foundComponent))
+            {
+                refComponent = (T)foundComponent;
+                return true;
+            }
+    
+            refComponent = null;
+            return false;
+        }
+        
         public T GetComponent<T>(out T refComponent) where T : class, IEntityComponent
         {
             if (_validComponents.TryGetValue(typeof(T), out var component))
