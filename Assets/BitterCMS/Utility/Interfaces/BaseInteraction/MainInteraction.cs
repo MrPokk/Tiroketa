@@ -1,5 +1,5 @@
 
-    interface IInitInMain
+    interface IInitInRoot
     {
         public void Init();
     }
@@ -22,5 +22,10 @@
     interface IEnterInPhysicUpdate
     {
         void PhysicUpdate(float timeDelta);
+    }
+
+    interface IEnterInLateUpdate
+    {
+        void LateUpdate(float timeDelta);
     }
     

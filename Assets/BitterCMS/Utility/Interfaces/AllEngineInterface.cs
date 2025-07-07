@@ -22,6 +22,8 @@ namespace BitterCMS.Utility.Interfaces
         protected internal void PreStartGame();
         protected internal void UpdateGame( float timeDelta);
         protected internal void PhysicUpdateGame(float timeDelta);
+        protected internal void LateUpdateGame(float timeDelta);
+
         protected internal void StoppedGame();
     }
 

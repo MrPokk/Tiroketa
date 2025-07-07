@@ -1,13 +1,15 @@
 using _Tiroketa._Script._Cms_Content.Components;
+using _Tiroketa._Script._Cms_Content.View.Mobs;
 using _Tiroketa._Script._Cms_Content.View.Modueles;
 using BitterCMS.CMSSystem;
 using BitterCMS.UnityIntegration.CMSComponent;
 using Game._Script._Cms_Content;
 using Game._Script._Cms_Content.Components;
 using Game._Script._Cms_Content.Entity.Mobs;
-using Game._Script._Cms_Content.View.Mobs;
 using Game._Script.CMSGame.Components;
 using System;
+using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace _Tiroketa._Script._Cms_Content.Entity.Mobs.Enemies
@@ -17,6 +19,7 @@ namespace _Tiroketa._Script._Cms_Content.Entity.Mobs.Enemies
     {
         private CMSEntity _findNearest = null;
         private float _stoppingDistance = 0.05f;
+        private Coroutine _attackProcessTimer = null;
 
         public DebugEnemy()
         {
@@ -25,14 +28,22 @@ namespace _Tiroketa._Script._Cms_Content.Entity.Mobs.Enemies
             AddComponent(out MoveProcessComponent _).Init(new(MoveProcess));
             AddComponent(out MoveComponent _);
 
+            AddComponent(out DamageComponent _);
             AddComponent(out HealthComponent _);
             AddComponent(out InsideItemComponent _);
         }
 
         private void AttackProcess()
         {
+          _attackProcessTimer ??= G.Coroutine.Run(AttackProcessYield());
+        }
+
+        private IEnumerator AttackProcessYield()
+        {
+            yield return new WaitForSeconds(2);
             GetComponent(out InsideItemComponent _).ContainItem?
                 .GetComponent(out AttackProcessComponent _).Properties?.AttackProcess?.Invoke();
+            _attackProcessTimer = null;
         }
 
         private void MoveProcess(float speed)

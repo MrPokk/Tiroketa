@@ -1,9 +1,9 @@
 using _Tiroketa._Script._Cms_Content.Components;
+using _Tiroketa._Script._Cms_Content.View.Mobs;
 using BitterCMS.CMSSystem;
 using BitterCMS.UnityIntegration.CMSComponent;
 using Game._Script._Cms_Content.Components;
 using Game._Script._Cms_Content.Entity.Mobs;
-using Game._Script._Cms_Content.View.Mobs;
 using Game._Script.CMSGame.Components;
 using System;
 using UnityEngine;

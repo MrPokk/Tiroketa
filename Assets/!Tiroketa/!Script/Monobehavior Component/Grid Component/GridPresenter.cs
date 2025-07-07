@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game._Script.GridComponent
@@ -37,6 +38,23 @@ namespace Game._Script.GridComponent
             int Y = Mathf.FloorToInt((objectPosition - (Vector3)_gridModel.PositionOrigin).y / _gridModel.CellSize);
             positionValue = new Vector2Int(X, Y);
             return true;
+        }
+
+        public List<T> GetAllContains()
+        {
+            List<T> all = new List<T>();
+
+            for (int i = 0; i < _gridModel.Array.GetLength(0); i++)
+            {
+                for (int j = 0; j < _gridModel.Array.GetLength(1); j++)
+                {
+                    if (_gridModel.Array[i,j] != null)
+                        all.Add(_gridModel.Array[i,j]);
+                    
+                }
+            }
+
+            return all;
         }
 
         public void SetValue(Vector2Int index, T value)

@@ -5,10 +5,14 @@
       <Speed>2</Speed>
     </MoveComponent>
   </Component>
+  <Component xsi:type="DamageComponent" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <DamageComponent xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <ApplyDamage>0</ApplyDamage>
+    </DamageComponent>
+  </Component>
   <Component xsi:type="HealthComponent" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <HealthComponent xmlns:xsd="http://www.w3.org/2001/XMLSchema">
       <MaxHealth>10</MaxHealth>
-      <HealthCurrent>10</HealthCurrent>
     </HealthComponent>
   </Component>
 </DebugEnemy>

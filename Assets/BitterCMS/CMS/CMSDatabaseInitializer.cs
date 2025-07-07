@@ -3,7 +3,7 @@ using System;
 
 namespace BitterCMS.CMSSystem
 {
-    public class CMSDatabaseInitializer : BaseInteraction, IInitInMain
+    public class CMSDatabaseInitializer : BaseInteraction, IInitInRoot
     {
         public override Priority PriorityInteraction { get => Priority.FIRST_TASK; }
 

@@ -18,6 +18,8 @@ namespace Game._Script._Cms_Content.Entity.Bullets
             AddComponent(out MoveProcessComponent _).Init(new(Move));
             AddComponent(out MoveComponent _);
             AddComponent(out DestroyTimeComponent _);
+
+            AddComponent<ColliderComponent>();
         }
         
         public void Launch(Transform gunTransform)

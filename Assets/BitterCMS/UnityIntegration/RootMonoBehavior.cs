@@ -1,4 +1,5 @@
 using BitterCMS.Utility.Interfaces;
+using System;
 using UnityEngine;
 
 namespace BitterCMS.UnityIntegration
@@ -30,6 +31,13 @@ namespace BitterCMS.UnityIntegration
                 element.PhysicUpdate(timeDelta);
             }
         }
+        void IRoot.LateUpdateGame(float timeDelta)
+        {
+            foreach (var element in InteractionCache<IEnterInLateUpdate>.AllInteraction)
+            {
+                element.LateUpdate(timeDelta);
+            }
+        }
 
         void IRoot.StoppedGame()
         {
@@ -50,6 +58,10 @@ namespace BitterCMS.UnityIntegration
         {
             ((IRoot)this).PhysicUpdateGame(Time.deltaTime);
         }
+        private void LateUpdate()
+        {
+            ((IRoot)this).LateUpdateGame(Time.deltaTime);
+        }
 
         private void OnDestroy()
         {
@@ -67,7 +79,7 @@ namespace BitterCMS.UnityIntegration
         protected virtual void FindInteraction(Interaction interaction)
         {
 
-            var init = interaction.FindAll<IInitInMain>();
+            var init = interaction.FindAll<IInitInRoot>();
             foreach (var element in init)
             {
                 element.Init();
@@ -81,6 +93,7 @@ namespace BitterCMS.UnityIntegration
 
             interaction.FindAll<IEnterInUpdate>();
             interaction.FindAll<IEnterInPhysicUpdate>();
+            interaction.FindAll<IEnterInLateUpdate>();
             interaction.FindAll<IExitInGame>();
         }
     }

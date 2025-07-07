@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace BitterCMS.CMSSystem
 {
-    public sealed class CMSRuntimer : BaseInteraction, IInitInMain
+    public sealed class CMSRuntimer : BaseInteraction, IInitInRoot
     {
         public override Priority PriorityInteraction { get => Priority.High; }
 

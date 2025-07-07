@@ -13,6 +13,7 @@ namespace BitterCMS.CMSSystem
     {
         private readonly Dictionary<BaseView, CMSEntity> _loadedEntity = new Dictionary<BaseView, CMSEntity>();
         private readonly HashSet<Type> _allowedEntityTypes = new HashSet<Type>();
+        private List<BaseView> _allDestroy = new List<BaseView>();
 
         protected CMSPresenter(params Type[] allowedTypes)
         {
@@ -172,7 +173,7 @@ namespace BitterCMS.CMSSystem
 
         public CMSEntity GetEntityByID(in BaseView ID)
         {
-            return ID == null ? null : _loadedEntity.GetValueOrDefault(ID);
+            return !ID ? null : _loadedEntity.GetValueOrDefault(ID);
         }
 
         public T GetEntityByType<T>() where T : CMSEntity
@@ -241,7 +242,7 @@ namespace BitterCMS.CMSSystem
         #endregion
 
         #region [DestroyEntity]
-
+        
         public virtual void DestroyEntity(in BaseView ID)
         {
             if (!ID || !ID.gameObject)

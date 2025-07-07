@@ -6,6 +6,7 @@ using Game._Script._Cms_Content;
 using Game._Script._Cms_Content.Entity.Weapon;
 using Game._Script.CMSGame.Components;
 using Game._Script.GridComponent;
+using Game._Script.Interaction;
 using Game._Script.Presenters;
 using UnityEngine;
 
@@ -34,5 +35,11 @@ public class Root : RootMonoBehavior
 
         player.GetModel().GetComponent(out InsideItemComponent _).GiveItem<PistolModel>(player.transform);
         debugEnemy.GetModel().GetComponent(out InsideItemComponent _).GiveItem<PistolModel>(debugEnemy.transform);
+    }
+
+    protected override void FindInteraction(Interaction interaction)
+    {
+        base.FindInteraction(interaction); 
+        interaction.FindAll<IColliderInteraction>();
     }
 }

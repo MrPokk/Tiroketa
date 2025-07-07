@@ -8,35 +8,24 @@ namespace Game._Script._Cms_Content.Components
     {
         private int _maxHealth;
         private int _healthCurrent;
-
-  
+        
         public int MaxHealth {
-            get {
-                return _maxHealth;
-            }
-            set {
-                Init(value);
-            }
+            get => _maxHealth;
+            set => Init(value);
         }
         
-        public int HealthCurrent {
-            get {
-                return _healthCurrent;
-            }
-            set {
-                if (value < _healthCurrent)
-                {
-                    // Decrease logic
-                    var deltaHealth = (_healthCurrent - (_healthCurrent - value));
-                    _healthCurrent = deltaHealth <= 0 ? 0 : deltaHealth;
-                }
-                else if (value > _healthCurrent)
-                {
-                    // Increase logic
-                    var deltaHealth = (_healthCurrent + (value - _healthCurrent));
-                    _healthCurrent = deltaHealth > _maxHealth ? _maxHealth : deltaHealth;
-                }
-            }
+        public int HealthCurrent => _healthCurrent;
+
+        public void Decrease(int value)
+        {
+            var deltaHealth = _healthCurrent - value;
+            _healthCurrent = deltaHealth >= 0 ? deltaHealth : 0;
+        }
+
+        public void Increase(int value)
+        {
+            var deltaHealth = value + _healthCurrent;
+            _healthCurrent = deltaHealth >= _maxHealth ? _maxHealth : deltaHealth;
         }
 
         public void Init(int maxHealth)

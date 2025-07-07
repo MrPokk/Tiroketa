@@ -8,7 +8,6 @@ namespace _Tiroketa._Script._Cms_Content.Components
 
         public class MoveProcessComponentProperty : InitializableProperty
         {
-            
             public readonly Action<float> MoveProcess;
             public MoveProcessComponentProperty(Action<float> moveProcess)
             {

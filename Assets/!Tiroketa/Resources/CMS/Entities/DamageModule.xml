@@ -2,7 +2,7 @@
 <DamageModule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Component xsi:type="DamageComponent" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <DamageComponent xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-      <ApplyDamage>5</ApplyDamage>
+      <ApplyDamage>1</ApplyDamage>
     </DamageComponent>
   </Component>
 </DamageModule>

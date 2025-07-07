@@ -1,6 +1,6 @@
-namespace Game._Script._Cms_Content.View.Bullets
+namespace _Tiroketa._Script._Cms_Content.View.Bullets
 {
-    public class StandardBulletView : BaseView
+    public class StandardBulletView : ViewCollision
     {
         
     }
