@@ -7,7 +7,7 @@
   </Component>
   <Component xsi:type="DestroyTimeComponent" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <DestroyTimeComponent xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-      <TotalTime>2</TotalTime>
+      <TotalTime>1.5</TotalTime>
     </DestroyTimeComponent>
   </Component>
 </StandardBulletModel>

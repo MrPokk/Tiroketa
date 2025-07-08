@@ -21,6 +21,7 @@ namespace Game._Script.Interaction
         {
             InteractionMove();
         }
+        
         private void InteractionMove()
         {
             var inputVector2 = _inputSystem.InputGameplay.move.ReadValue<Vector2>();

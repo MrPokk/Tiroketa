@@ -34,7 +34,7 @@ public class Root : RootMonoBehavior
         CMSRuntimer.GetPresenter<ModulesPresenter>().SpawnFromDB(typeof(DamageModule));
 
         player.GetModel().GetComponent(out InsideItemComponent _).GiveItem<PistolModel>(player.transform);
-        debugEnemy.GetModel().GetComponent(out InsideItemComponent _).GiveItem<PistolModel>(debugEnemy.transform);
+     //   debugEnemy.GetModel().GetComponent(out InsideItemComponent _).GiveItem<PistolModel>(debugEnemy.transform);
     }
 
     protected override void FindInteraction(Interaction interaction)

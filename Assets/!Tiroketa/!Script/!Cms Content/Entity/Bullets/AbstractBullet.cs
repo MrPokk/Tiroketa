@@ -21,10 +21,10 @@ namespace Game._Script._Cms_Content.Entity.Bullets
 
             AddComponent<ColliderComponent>();
         }
-        
+
         public void Launch(Transform gunTransform)
         {
-            if (gunTransform == null) return;
+            if (!gunTransform) return;
 
             SetDirection(gunTransform);
             PositionView(gunTransform);
@@ -49,7 +49,8 @@ namespace Game._Script._Cms_Content.Entity.Bullets
 
         protected virtual void Move(float speed)
         {
-            GetView().transform.Translate(Vector3.right * speed);
+            if (TryGetView(out BaseView view))
+                view.transform.Translate(Vector3.right * speed);
         }
     }
 }

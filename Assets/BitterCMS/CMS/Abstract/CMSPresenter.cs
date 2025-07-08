@@ -9,11 +9,11 @@ using Object = UnityEngine.Object;
 
 namespace BitterCMS.CMSSystem
 {
-    public abstract class CMSPresenter
+    public abstract class CMSPresenter : BaseInteraction, IEnterInLateUpdate
     {
         private readonly Dictionary<BaseView, CMSEntity> _loadedEntity = new Dictionary<BaseView, CMSEntity>();
         private readonly HashSet<Type> _allowedEntityTypes = new HashSet<Type>();
-        private List<BaseView> _allDestroy = new List<BaseView>();
+        private readonly static Queue<BaseView> AllDestroy = new Queue<BaseView>();
 
         protected CMSPresenter(params Type[] allowedTypes)
         {
@@ -25,7 +25,7 @@ namespace BitterCMS.CMSSystem
                 _allowedEntityTypes.Add(type);
             }
         }
-        
+
         public sealed class CMSPresenterProperty : InitializableProperty
         {
             public readonly CMSPresenter Presenter;
@@ -33,10 +33,11 @@ namespace BitterCMS.CMSSystem
             {
                 Presenter = presenter;
             }
-            
+
         }
 
         #region [SpawnEntity]
+
         /// <summary>
         /// Spawn entity from database if the type is [Serializable], other creates of type
         /// </summary>
@@ -121,18 +122,19 @@ namespace BitterCMS.CMSSystem
         #region [Entity Management]
 
         private BaseView LinkingMonobehaviour(
-            CMSEntity entity, ViewComponent view, 
-            Vector3 position, Quaternion rotation, Transform parent)
+            CMSEntity entity, ViewComponent view,
+            Vector3 position, Quaternion rotation, Transform parent
+        )
         {
             if (view?.Properties?.Original == null || entity == null)
                 return null;
 
             var newView = Object.Instantiate(view.Properties.Original, position, rotation, parent);
             newView.name = $"{entity.ID.Name} [NEW]";
-    
+
             view.Properties.Current = newView;
             _loadedEntity[newView] = entity;
-    
+
             return newView;
         }
 
@@ -198,40 +200,43 @@ namespace BitterCMS.CMSSystem
         {
             return GetEntities().Values as IReadOnlyCollection<CMSEntity>;
         }
-        
+
         public CMSEntity[] GetEntitiesToComponent(
-            Type[] requiredComponents = null, 
-            Type[] excludedComponents = null)
+            Type[] requiredComponents = null,
+            Type[] excludedComponents = null
+        )
         {
             var allEntity = GetModelEntities();
-    
-            return allEntity.Where(entity => 
-            {
-                var hasRequired = requiredComponents == null || 
+
+            return allEntity.Where(entity => {
+                var hasRequired = requiredComponents == null ||
                                   requiredComponents.All(entity.HasComponent);
-        
-                var hasExcluded = excludedComponents != null && 
+
+                var hasExcluded = excludedComponents != null &&
                                   excludedComponents.Any(entity.HasComponent);
-        
+
                 return hasRequired && !hasExcluded;
             }).ToArray();
         }
 
-        public IReadOnlyCollection<CMSEntity> GetEntitiesToComponent<TRequired, TExcluded>() 
-            where TRequired : IEntityComponent 
+        public IReadOnlyCollection<CMSEntity> GetEntitiesToComponent<TRequired, TExcluded>()
+            where TRequired : IEntityComponent
             where TExcluded : IEntityComponent
         {
             return GetModelEntities()
                 .Where(entity => entity.HasComponent<TRequired>() && !entity.HasComponent<TExcluded>())
                 .ToArray();
         }
-        
+
         public CMSEntity[] GetEntitiesToComponent(params Type[] typeComponent)
         {
             var allEntity = GetModelEntities();
 
-            return (from entity in allEntity let hasAllComponents = 
-                typeComponent.All(entity.HasComponent) where hasAllComponents select entity).ToArray();
+            return (from entity in allEntity
+                let hasAllComponents =
+                    typeComponent.All(entity.HasComponent)
+                where hasAllComponents
+                select entity).ToArray();
         }
 
         public IReadOnlyCollection<CMSEntity> GetEntitiesToComponent<TComponent>() where TComponent : IEntityComponent
@@ -242,14 +247,26 @@ namespace BitterCMS.CMSSystem
         #endregion
 
         #region [DestroyEntity]
-        
+
+        public void LateUpdate(float timeDelta)
+        {
+            if (!AllDestroy.Any())
+                return;
+            
+            foreach (var viewDestroy in AllDestroy)
+            {
+                _loadedEntity.Remove(viewDestroy);
+                Object.Destroy(viewDestroy.gameObject);
+            }
+            AllDestroy.Clear();
+        }
+
         public virtual void DestroyEntity(in BaseView ID)
         {
-            if (!ID || !ID.gameObject)
+            if (!ID || AllDestroy.Contains(ID))
                 return;
-
-            _loadedEntity.Remove(ID);
-            Object.Destroy(ID.gameObject);
+            
+            AllDestroy.Enqueue(ID);
         }
 
         public virtual void DestroyAllEntities()

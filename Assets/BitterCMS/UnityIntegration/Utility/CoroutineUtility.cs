@@ -8,13 +8,13 @@ namespace BitterCMS.Utility
 {
     public class CoroutineUtility : MonoBehaviour
     {
-        private Queue<Coroutine> ActiveCoroutines { get; set; } = new Queue<Coroutine>();
+        private readonly Queue<Coroutine> _activeCoroutines = new Queue<Coroutine>();
         private event Action OnStopAll;
         private event Action<IEnumerator> OnStopOne;
         private Coroutine RunCoroutine(IEnumerator coroutine)
         {
             var coroutineInstance = StartCoroutine(InternalRunCoroutine(coroutine));
-            ActiveCoroutines.Enqueue(coroutineInstance);
+            _activeCoroutines.Enqueue(coroutineInstance);
 
             return coroutineInstance;
         }
@@ -22,12 +22,13 @@ namespace BitterCMS.Utility
         private IEnumerator InternalRunCoroutine(IEnumerator coroutine)
         {
             yield return coroutine;
-            ActiveCoroutines.Dequeue();
+            _activeCoroutines.Dequeue();
             OnStopOne?.Invoke(coroutine);
 
-            if (ActiveCoroutines.Count == 0)
+            if (_activeCoroutines.Count == 0)
                 OnStopAll?.Invoke();
         }
+        
         public sealed class CoroutineRunner
         {
             private readonly CoroutineUtility _utility;
@@ -44,7 +45,7 @@ namespace BitterCMS.Utility
 
             public void StopAll(Action callBack)
             {
-                if (!_utility.ActiveCoroutines.Any())
+                if (!_utility._activeCoroutines.Any())
                 {
                     callBack?.Invoke();
                     return;

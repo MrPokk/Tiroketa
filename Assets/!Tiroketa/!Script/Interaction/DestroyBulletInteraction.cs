@@ -2,6 +2,7 @@ using BitterCMS.CMSSystem;
 using Game._Script._Cms_Content.Components;
 using Game._Script.Presenters;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Game._Script.Interaction
 {
@@ -11,7 +12,6 @@ namespace Game._Script.Interaction
         {
             var bulletPresenter = CMSRuntimer.GetPresenter<BulletPresenter>();
             var bullets = bulletPresenter.GetModelEntities();
-            var entitiesToDestroy = new List<CMSEntity>();
 
             foreach (var entity in bullets)
             {
@@ -22,14 +22,7 @@ namespace Game._Script.Interaction
                 destroyTimeComponent.Decrease(timeDelta);
 
                 if (destroyTimeComponent.TotalTime <= 0f)
-                {
-                    entitiesToDestroy.Add(entity);
-                }
-            }
-
-            foreach (var entity in entitiesToDestroy)
-            {
-                CMSRuntimer.GetPresenter<BulletPresenter>().DestroyEntity(entity.GetView());
+                    bulletPresenter.DestroyEntity(entity.GetView());
             }
         }
     }

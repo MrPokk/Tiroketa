@@ -5,7 +5,6 @@ using BitterCMS.UnityIntegration.CMSComponent;
 using Game._Script._Cms_Content.Entity.Bullets;
 using Game._Script._Cms_Content.Entity.Weapons;
 using Game._Script.CMSGame.Components;
-using Game._Script.Interaction;
 using Game._Script.Presenters;
 
 namespace Game._Script._Cms_Content.Entity.Weapon

@@ -7,14 +7,14 @@ using UnityEngine;
 
 namespace Game._Script.Interaction
 {
-    public class LookMouseInteraction : BaseInteraction, IEnterInUpdate, IEnterInStart
+    public class LookMouseInteraction : BaseInteraction, IEnterInStart , IEnterInPhysicUpdate
     {
         private MobPresenter _mobPresenter;
         private Vector3 _mouseWorldPos;
 
         public void Start() => _mobPresenter = CMSRuntimer.GetPresenter<MobPresenter>();
-
-        public void Update(float timeDelta)
+        
+        public void PhysicUpdate(float timeDelta)
         {
             _mouseWorldPos = ControlInteraction.GetMousePositionWorld();
 
@@ -29,6 +29,7 @@ namespace Game._Script.Interaction
         private void ProcessEntityLook(CMSEntity entity)
         {
             if (!entity.TryGetComponent(out InsideItemComponent insideItem) ||
+                insideItem.ContainItem == null ||
                 !insideItem.ContainItem.TryGetComponent(out LookAtComponent lookAt) ||
                 !insideItem.ContainItem.TryGetView(out var itemView) ||
                 !entity.TryGetView(out var entityView))
@@ -44,7 +45,8 @@ namespace Game._Script.Interaction
 
             itemView.transform.SetPositionAndRotation(
                 parentPos + direction * lookAt.RotationRadius,
-                Quaternion.Lerp(itemView.transform.rotation, targetRotation, lookAt.RotationSpeed * Time.deltaTime * 5f)
+                Quaternion.Lerp(itemView.transform.rotation, targetRotation, 
+                    lookAt.RotationSpeed * Time.deltaTime * 5f)
             );
         }
     }
