@@ -23,12 +23,12 @@ namespace Game._Script._Cms_Content
             AddComponent(out MoveComponent _);
 
             AddComponent(out ControlComponent _);
-            AddComponent(out InsideItemComponent _);
+            AddComponent(out InsideItemsComponent _);
         }
         
         private void AttackProcess()
         {
-            GetComponent(out InsideItemComponent _).ContainItem?
+            GetComponent(out InsideItemsComponent _).UsingItem?
                 .GetComponent(out AttackProcessComponent _).Properties?.AttackProcess?.Invoke();
         }
         

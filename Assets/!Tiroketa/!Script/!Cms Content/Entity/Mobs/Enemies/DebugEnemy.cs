@@ -1,6 +1,6 @@
 using _Tiroketa._Script._Cms_Content.Components;
+using _Tiroketa._Script._Cms_Content.Entity.Modules;
 using _Tiroketa._Script._Cms_Content.View.Mobs;
-using _Tiroketa._Script._Cms_Content.View.Modueles;
 using BitterCMS.CMSSystem;
 using BitterCMS.UnityIntegration.CMSComponent;
 using Game._Script._Cms_Content;
@@ -9,7 +9,7 @@ using Game._Script._Cms_Content.Entity.Mobs;
 using Game._Script.CMSGame.Components;
 using System;
 using System.Collections;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace _Tiroketa._Script._Cms_Content.Entity.Mobs.Enemies
@@ -19,31 +19,33 @@ namespace _Tiroketa._Script._Cms_Content.Entity.Mobs.Enemies
     {
         private CMSEntity _findNearest = null;
         private float _stoppingDistance = 0.05f;
-        private Coroutine _attackProcessTimer = null;
 
         public DebugEnemy()
         {
             AddComponent(out ViewComponent _).Init(new(CMSViewDatabase.Get<PlayerView>()));
             AddComponent(out AttackProcessComponent _).Init(new(AttackProcess));
             AddComponent(out MoveProcessComponent _).Init(new(MoveProcess));
-            AddComponent(out MoveComponent _);
+            AddComponent(out InsideItemsComponent _).Init(new(new CMSEntity[]
+            {
+                new DamageModule(),
+            }));
+
+            AddComponent(out MoveComponent _);  
 
             AddComponent(out DamageComponent _);
             AddComponent(out HealthComponent _);
-            AddComponent(out InsideItemComponent _);
         }
 
         private void AttackProcess()
-        {
-          _attackProcessTimer ??= G.Coroutine.Run(AttackProcessYield());
+        { 
+            //G.Coroutine.Run(AttackProcessYield());
         }
 
         private IEnumerator AttackProcessYield()
         {
             yield return new WaitForSeconds(2);
-            GetComponent(out InsideItemComponent _).ContainItem?
+            GetComponent(out InsideItemsComponent _).UsingItem?
                 .GetComponent(out AttackProcessComponent _).Properties?.AttackProcess?.Invoke();
-            _attackProcessTimer = null;
         }
 
         private void MoveProcess(float speed)
@@ -67,7 +69,7 @@ namespace _Tiroketa._Script._Cms_Content.Entity.Mobs.Enemies
             var direction = nearestView.transform.position - currentView.transform.position;
             if (!(direction.sqrMagnitude > _stoppingDistance))
                 return;
-            
+
             direction.Normalize();
             currentView.transform.Translate(direction * (speed * Time.deltaTime));
         }

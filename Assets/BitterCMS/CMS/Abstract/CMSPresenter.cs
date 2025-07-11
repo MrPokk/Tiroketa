@@ -13,7 +13,7 @@ namespace BitterCMS.CMSSystem
     {
         private readonly Dictionary<BaseView, CMSEntity> _loadedEntity = new Dictionary<BaseView, CMSEntity>();
         private readonly HashSet<Type> _allowedEntityTypes = new HashSet<Type>();
-        private readonly static Queue<BaseView> AllDestroy = new Queue<BaseView>();
+        private readonly static HashSet<BaseView> AllDestroy = new HashSet<BaseView>();
 
         protected CMSPresenter(params Type[] allowedTypes)
         {
@@ -126,7 +126,7 @@ namespace BitterCMS.CMSSystem
             Vector3 position, Quaternion rotation, Transform parent
         )
         {
-            if (view?.Properties?.Original == null || entity == null)
+            if (!view?.Properties.Original || entity == null)
                 return null;
 
             var newView = Object.Instantiate(view.Properties.Original, position, rotation, parent);
@@ -252,7 +252,7 @@ namespace BitterCMS.CMSSystem
         {
             if (!AllDestroy.Any())
                 return;
-            
+
             foreach (var viewDestroy in AllDestroy)
             {
                 _loadedEntity.Remove(viewDestroy);
@@ -263,10 +263,10 @@ namespace BitterCMS.CMSSystem
 
         public virtual void DestroyEntity(in BaseView ID)
         {
-            if (!ID || AllDestroy.Contains(ID))
+            if (!ID)
                 return;
-            
-            AllDestroy.Enqueue(ID);
+
+            AllDestroy.Add(ID);
         }
 
         public virtual void DestroyAllEntities()

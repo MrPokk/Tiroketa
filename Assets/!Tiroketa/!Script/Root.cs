@@ -29,17 +29,22 @@ public class Root : RootMonoBehavior
         var player = CMSRuntimer.GetPresenter<MobPresenter>().SpawnFromDB(typeof(PlayerModel));
 
         var debugEnemy = CMSRuntimer.GetPresenter<MobPresenter>().SpawnFromDB(typeof(DebugEnemy));
+        CMSRuntimer.GetPresenter<MobPresenter>().SpawnFromDB(typeof(DebugEnemy));
+        CMSRuntimer.GetPresenter<MobPresenter>().SpawnFromDB(typeof(DebugEnemy));
+        CMSRuntimer.GetPresenter<MobPresenter>().SpawnFromDB(typeof(DebugEnemy));
+
 
         CMSRuntimer.GetPresenter<ModulesPresenter>().SpawnFromDB(typeof(DamageModule));
         CMSRuntimer.GetPresenter<ModulesPresenter>().SpawnFromDB(typeof(DamageModule));
 
-        player.GetModel().GetComponent(out InsideItemComponent _).GiveItem<PistolModel>(player.transform);
-     //   debugEnemy.GetModel().GetComponent(out InsideItemComponent _).GiveItem<PistolModel>(debugEnemy.transform);
+        player.GetModel().GetComponent(out InsideItemsComponent _).GiveItem<PistolModel>(player.transform);
+
     }
 
     protected override void FindInteraction(Interaction interaction)
     {
-        base.FindInteraction(interaction); 
+        base.FindInteraction(interaction);
         interaction.FindAll<IColliderInteraction>();
+        interaction.FindAll<IAtDestroyEntityInteraction>();
     }
 }

@@ -18,7 +18,7 @@ namespace Game._Script.Interaction
         {
             _mouseWorldPos = ControlInteraction.GetMousePositionWorld();
 
-            var entities = _mobPresenter.GetEntitiesToComponent(typeof(ControlComponent), typeof(InsideItemComponent));
+            var entities = _mobPresenter.GetEntitiesToComponent(typeof(ControlComponent), typeof(InsideItemsComponent));
 
             foreach (var entity in entities)
             {
@@ -28,10 +28,10 @@ namespace Game._Script.Interaction
 
         private void ProcessEntityLook(CMSEntity entity)
         {
-            if (!entity.TryGetComponent(out InsideItemComponent insideItem) ||
-                insideItem.ContainItem == null ||
-                !insideItem.ContainItem.TryGetComponent(out LookAtComponent lookAt) ||
-                !insideItem.ContainItem.TryGetView(out var itemView) ||
+            if (!entity.TryGetComponent(out InsideItemsComponent insideItem) ||
+                insideItem.UsingItem == null ||
+                !insideItem.UsingItem.TryGetComponent(out LookAtComponent lookAt) ||
+                !insideItem.UsingItem.TryGetView(out var itemView) ||
                 !entity.TryGetView(out var entityView))
             {
                 return;

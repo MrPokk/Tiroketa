@@ -7,19 +7,14 @@ using Game._Script._Cms_Content.Components;
 using Game._Script._Cms_Content.Entity.Bullets;
 using Game._Script._Cms_Content.Entity.Mobs;
 using Game._Script.CMSGame.Components;
-using Game._Script.GridComponent;
-using Game._Script.Presenters;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game._Script.Interaction
 {
-    public class DamagePlayerInteraction : BaseInteraction, IColliderInteraction, IEnterInStart
+    public class DamagePlayerInteraction : BaseInteraction, IColliderInteraction
     {
         private List<AbstractModule> AllModules => G.GetRoot<Root>().GridPresenter.GetAllContains();
-
-        private MobPresenter _mobPresenter;
-        public void Start() => _mobPresenter = CMSRuntimer.GetPresenter<MobPresenter>();
         public void EnterCollider(ViewCollision source, ViewCollision collision)
         {
             if (collision.GetModel() is not AbstractBullet)

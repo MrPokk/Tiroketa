@@ -22,7 +22,7 @@ namespace Game._Script._Cms_Content.Entity.Weapon
             var bullet = CMSRuntimer.GetPresenter<BulletPresenter>().SpawnFromDB(
                 typeof(StandardBulletModel), position: GetView().transform.position);
 
-            bullet.GetModel<AbstractBullet>().Launch(GetView().transform);
+            bullet?.GetModel<AbstractBullet>().Launch(GetView().transform);
         }
     }
 }
